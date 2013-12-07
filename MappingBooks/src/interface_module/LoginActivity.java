@@ -1,4 +1,6 @@
-package com.project.mappingbooks;
+package interface_module;
+
+import com.project.mappingbooks.R;
 
 import android.os.Bundle;
 import android.app.Activity;
