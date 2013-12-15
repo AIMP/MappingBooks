@@ -6,5 +6,4 @@ public class GeographyEngine {
 
 	private val3;
 	private val4;
-	private val5;
 }
