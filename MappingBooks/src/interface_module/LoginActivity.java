@@ -51,9 +51,7 @@ public class LoginActivity extends Activity {
 		if (view.getId() == R.id.login_button) {
 			String username = userNameEditText.getText().toString();
 			String password = passwordEditText.getText().toString();
-			//NetworkManager.sendJson(new String[] { username, password });
-			Intent viewMenuIntent = new Intent(this, BookViewerActivity.class);
-			startActivity(viewMenuIntent);
+			NetworkManager.sendJson(new String[] { username, password });
 		}
 	}
 

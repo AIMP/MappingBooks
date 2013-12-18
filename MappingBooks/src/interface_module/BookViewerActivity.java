@@ -7,6 +7,7 @@ import interface_module.slinding_menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 
 import com.project.mappingbooks.R;
 
+@SuppressLint("NewApi")
 public class BookViewerActivity extends Activity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -125,12 +127,6 @@ public class BookViewerActivity extends Activity {
 		}
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu., menu);
-//		return true;
-//	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// toggle nav drawer on selecting action bar app icon/title
@@ -151,9 +147,6 @@ public class BookViewerActivity extends Activity {
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// if nav drawer is opened, hide the action items
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
