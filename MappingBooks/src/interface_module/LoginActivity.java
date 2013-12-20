@@ -1,5 +1,9 @@
 package interface_module;
 
+import java.util.concurrent.ExecutionException;
+
+import interface_module.async_tasks.LoginAsyncTask;
+
 import com.project.mappingbooks.R;
 import android.os.Bundle;
 import android.app.Activity;
@@ -7,13 +11,16 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class LoginActivity extends Activity {
 	protected EditText userNameEditText;
 	protected EditText passwordEditText;
+	protected ProgressBar progressBar;
 	private int limit;
 
 	@Override
@@ -22,6 +29,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		userNameEditText = (EditText) findViewById(R.id.input_username);
 		passwordEditText = (EditText) findViewById(R.id.input_password);
+		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		limit = 50;
 		setLimit(userNameEditText);
 		setLimit(passwordEditText);
@@ -51,7 +59,18 @@ public class LoginActivity extends Activity {
 		if (view.getId() == R.id.login_button) {
 			String username = userNameEditText.getText().toString();
 			String password = passwordEditText.getText().toString();
-			NetworkManager.sendJson(new String[] { username, password });
+			Intent intent = new Intent(this,BookList.class);
+			startActivity(intent);
+			try {
+				String response = new LoginAsyncTask(this).execute(new String[] { username, password }).get();
+				Log.v("Response", response);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -88,6 +107,10 @@ public class LoginActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	public View getProgressBar() {
+		return this.progressBar;
 	}
 
 }

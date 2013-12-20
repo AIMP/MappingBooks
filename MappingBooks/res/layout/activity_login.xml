@@ -118,21 +118,38 @@
                 android:inputType="textPassword"
                 android:textSize="15sp" />
 
-            <Button
-                android:id="@+id/login_button"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/rounded_button"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:onClick="login"
-                android:text="@string/login"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/rounded_button"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:onClick="login"
+                    android:text="@string/login"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignBottom="@+id/login_button"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignRight="@+id/login_button"
+                    android:layout_marginTop="3dp"
+                    android:indeterminate="false" 
+                    android:visibility="invisible"/>
+
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
 

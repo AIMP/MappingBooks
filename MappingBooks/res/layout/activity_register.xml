@@ -100,7 +100,13 @@
                 android:inputType="textPassword"
                 android:textSize="15sp" />
 
-            <Button
+           
+            
+             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                 <Button
                 android:id="@+id/register_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,6 +121,19 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
+                 
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignBottom="@+id/register_button"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignRight="@+id/register_button"
+                    android:layout_marginTop="3dp"
+                    android:indeterminate="false" 
+                    android:visibility="invisible"/>
+
+            </RelativeLayout>
             
         </LinearLayout>
     </RelativeLayout>

@@ -1,20 +1,28 @@
 package interface_module;
 
+import java.util.concurrent.ExecutionException;
+
+import interface_module.async_tasks.RegisterAsyncTask;
+
 import com.project.mappingbooks.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class RegisterActivity extends Activity {
 	protected EditText userNameEditText;
 	protected EditText emailEditText;
 	protected EditText passwordEditText;
 	protected EditText confirmPasswordEditText;
+	protected ProgressBar progressBar;
 	private int limit;
 
 	@Override
@@ -30,6 +38,7 @@ public class RegisterActivity extends Activity {
 		setLimit(passwordEditText);
 		confirmPasswordEditText = (EditText) findViewById(R.id.confirm_input_password);
 		setLimit(confirmPasswordEditText);
+		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 	}
 
 	@Override
@@ -41,14 +50,25 @@ public class RegisterActivity extends Activity {
 
 	public void createAccount(View view) {
 		if (view.getId() == R.id.register_button) {
+			Intent intent = new Intent(this,BookViewerActivity.class);
+			startActivity(intent);
 			String username = userNameEditText.getText().toString();
 			String email = emailEditText.getText().toString();
 			String password = passwordEditText.getText().toString();
 			String confirmedPassword = confirmPasswordEditText.getText()
 					.toString();
-			if (isValidInput(username, email, password, confirmedPassword)) {
-				NetworkManager.sendJson(new String[] { username, email, password});
-			}
+//			if (isValidInput(username, email, password, confirmedPassword)) {
+//				try {
+//					String response =  new RegisterAsyncTask(this).execute(new String[] {username,email,password,confirmedPassword}).get();
+//					Log.v("Response:", response);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (ExecutionException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	}
 
@@ -90,5 +110,9 @@ public class RegisterActivity extends Activity {
 		// TODO:validate input
 		return true;
 
+	}
+
+	public View getProgressBar() {
+		return this.progressBar;
 	}
 }

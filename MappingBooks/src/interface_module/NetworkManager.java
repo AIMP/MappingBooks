@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.KeyStore;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -24,11 +23,11 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
-
 import android.os.Looper;
 import android.util.Log;
 
 public class NetworkManager {
+
 	public static void sendJson(final String[] params) {
 
 		Thread t = new Thread() {
@@ -38,13 +37,13 @@ public class NetworkManager {
 
 				try {
 					String[] type;
-					if (params.length == 2) { //login
+					if (params.length == 2) { // login
 						type = new String[2];
 						type[0] = "email";
 						type[1] = "password";
 						URL = "https://107.23.123.140/client/login";// https://ia_clientserver-c9-icaliman.c9.io/client/login
 					} else {
-						type = new String[3]; //register
+						type = new String[3]; // register
 						type[0] = "username";
 						type[1] = "email";
 						type[2] = "password";
@@ -94,7 +93,7 @@ public class NetworkManager {
 		t.start();
 	}
 
-	private static HttpClient getNewHttpClient() {
+	public static HttpClient getNewHttpClient() {
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore
 					.getDefaultType());
@@ -120,5 +119,4 @@ public class NetworkManager {
 			return new DefaultHttpClient();
 		}
 	}
-
 }
