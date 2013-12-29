@@ -17,7 +17,6 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.view.View;
 
 public class RegisterAsyncTask extends AsyncTask<String, Void, String> {
@@ -42,10 +41,9 @@ public class RegisterAsyncTask extends AsyncTask<String, Void, String> {
 				type[0] = "username";
 				type[1] = "email";
 				type[2] = "password";
-				URL = "http://172.17.50.187:3000/client/register";// https://ia_clientserver-c9-icaliman.c9.io/client/register
+				URL = "http://192.168.0.100:3000/client/register";// https://ia_clientserver-c9-icaliman.c9.io/client/register
 			}
 
-			Looper.prepare();
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new
 			// DefaultHttpClient();
@@ -87,5 +85,7 @@ public class RegisterAsyncTask extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		this.activity.getProgressBar().setVisibility(View.INVISIBLE);
+		if (result != null)
+			this.activity.handleResponse(result);
 	}
 }

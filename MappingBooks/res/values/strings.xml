@@ -45,4 +45,5 @@
     
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="noBooks">You don\'t have any book uploaded.</string>
 </resources>

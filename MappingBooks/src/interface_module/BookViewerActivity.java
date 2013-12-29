@@ -1,7 +1,5 @@
 package interface_module;
 
-
-
 import interface_module.slinding_menu.NavDrawerItem;
 import interface_module.slinding_menu.NavDrawerListAdapter;
 

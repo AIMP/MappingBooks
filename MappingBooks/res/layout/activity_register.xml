@@ -49,6 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical"
             android:padding="10dip" >
 
@@ -100,28 +102,26 @@
                 android:inputType="textPassword"
                 android:textSize="15sp" />
 
-           
-            
-             <RelativeLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                 <Button
-                android:id="@+id/register_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/rounded_button"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:onClick="createAccount"
-                android:text="@string/register"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
-                 
+                <Button
+                    android:id="@+id/register_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/rounded_button"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:onClick="createAccount"
+                    android:text="@string/register"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="30dp"
@@ -130,11 +130,9 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignRight="@+id/register_button"
                     android:layout_marginTop="3dp"
-                    android:indeterminate="false" 
-                    android:visibility="invisible"/>
-
+                    android:indeterminate="false"
+                    android:visibility="invisible" />
             </RelativeLayout>
-            
         </LinearLayout>
     </RelativeLayout>
 
