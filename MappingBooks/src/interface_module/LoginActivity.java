@@ -29,7 +29,7 @@ public class LoginActivity extends Activity {
 	private final String TAG_STATUS = "status";
 	//private final String TAG_ERROR = "errorCode";
 	private final String TAG_SESSIONID = "sessionId";
-
+	//test
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
