@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import interface_module.async_tasks.LoginAsyncTask;
 
+import interface_module.IntentIntegrator;
+import interface_module.IntentResult;
 import com.project.mappingbooks.R;
 import android.os.Bundle;
 import android.app.Activity;
@@ -19,6 +21,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	protected EditText userNameEditText;
@@ -148,6 +151,24 @@ public class LoginActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void scanNow(View view) {
+		
+		IntentIntegrator integrator = new IntentIntegrator(this);
+		integrator.initiateScan();
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {     
+		
+		IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		if (scanningResult != null) {
+			//we have a result
+		}else{
+		    Toast toast = Toast.makeText(getApplicationContext(),
+		            "No scan data received!", Toast.LENGTH_SHORT);
+		        toast.show();
+	    }
 	}
 
 	public String getSessionID() {
