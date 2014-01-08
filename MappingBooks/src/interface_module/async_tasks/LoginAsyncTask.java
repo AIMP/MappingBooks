@@ -40,7 +40,7 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
 				type = new String[2];
 				type[0] = "email";
 				type[1] = "password";
-				URL = "http://192.168.0.100:3000/client/login";// https://ia_clientserver-c9-icaliman.c9.io/client/login
+				URL = "http://192.168.0.106:3000/client/login";// https://ia_clientserver-c9-icaliman.c9.io/client/login
 			}
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new

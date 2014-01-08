@@ -10,9 +10,12 @@ import com.project.mappingbooks.R;
 
 import android.os.Bundle;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class BookListActivity extends ListActivity {
 
@@ -57,10 +60,42 @@ public class BookListActivity extends ListActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
-		
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.add_book_menu_item:
+			scanNow();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
+
+	public void scanNow() {
+
+		IntentIntegrator integrator = new IntentIntegrator(this);
+		integrator.initiateScan();
+	}
+
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+		IntentResult scanningResult = IntentIntegrator.parseActivityResult(
+				requestCode, resultCode, intent);
+		if (scanningResult != null) {
+			// we have a result
+		} else {
+			Toast toast = Toast.makeText(getApplicationContext(),
+					"No scan data received!", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+
+	}
+
 	public LinearLayout getProgressLayout() {
 		return progressLayout;
 	}

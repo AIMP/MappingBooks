@@ -41,7 +41,7 @@ public class RegisterAsyncTask extends AsyncTask<String, Void, String> {
 				type[0] = "username";
 				type[1] = "email";
 				type[2] = "password";
-				URL = "http://192.168.0.100:3000/client/register";// https://ia_clientserver-c9-icaliman.c9.io/client/register
+				URL = "http://192.168.0.106:3000/client/register";// https://ia_clientserver-c9-icaliman.c9.io/client/register
 			}
 
 			HttpPost post = new HttpPost(URL);
