@@ -7,14 +7,30 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+    
+    <permission
+        android:name="com.project.mappingbooks.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+     
+    <!-- Require OpenGL ES version 2 -->
+    <uses-feature
+	    android:glEsVersion="0x00020000"
+	    android:required="true"/>
 
+    <uses-permission android:name="com.project.mappingbooks.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         <activity
             android:name="interface_module.LoginActivity"
             android:label="@string/app_name" >
@@ -24,9 +40,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="geography_module.DisplayMessageActivity"
+            android:label="@string/title_activity_display_message"
+            android:parentActivityName="interface_module..." >
+            
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="interface_module..." />
+        </activity>
+        
         <activity android:name="interface_module.RegisterActivity" />
         <activity android:name="interface_module.BookListActivity" />
         <activity android:name="interface_module.BookViewerActivity" />
+        
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBXy3LfjTNSJtnpdg5HS6BP667I3uAYOHw"/>
+        
+        <meta-data 
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        
     </application>
 
 </manifest>
