@@ -55,6 +55,9 @@
         <activity android:name="interface_module.BookListActivity" />
         <activity android:name="interface_module.BookViewerActivity" />
         
+         <!-- Valoarea API key nu este valida deoarece s-a schimbat denumirea pachetului 
+         si de asta trebuie generata un nou API key avand ca parametru denumirea pachetului 
+         de lucru actual-->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBXy3LfjTNSJtnpdg5HS6BP667I3uAYOHw"/>
