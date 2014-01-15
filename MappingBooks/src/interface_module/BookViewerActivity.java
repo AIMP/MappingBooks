@@ -53,7 +53,7 @@ public class BookViewerActivity extends Activity {
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
 	String popUpContents[];
-	PopupWindow popupWindowDogs;   
+	PopupWindow popupWindow;   
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +66,6 @@ public class BookViewerActivity extends Activity {
 		
 		 mDrawerList.setAdapter(new MyAddapter(BookViewerActivity.this));
 		 
-		 List<String> dogsList = new ArrayList<String>();
-	        dogsList.add("Samsung");
-	        dogsList.add("Google");
-	        dogsList.add("Yahoo");
-	        dogsList.add("Microsoft");
-
-	        // convert to simple array
-	        popUpContents = new String[dogsList.size()];
-	        dogsList.toArray(popUpContents);
-
-	        /*
-	         * initialize pop up window
-	         */
-	    popupWindowDogs = popupWindowDogs();
 		mTitle = mDrawerTitle = getTitle();
 
 		// load slide menu items
@@ -149,19 +135,44 @@ public class BookViewerActivity extends Activity {
 	}
 	
 	
-	 public PopupWindow popupWindowDogs() {
+	 public PopupWindow popupWindow(int position) {
 
 	        // initialize a pop up window type
-	        PopupWindow popupWindow = new PopupWindow(this);
+	        popupWindow = new PopupWindow(this);
 
 	        // the drop down list is a list view
-	        ListView listViewDogs = new ListView(this);
+	        ListView listView = new ListView(this);
+	        
+	        if(position == 0) {
+	        	List<String> proximityList = new ArrayList<String>();
+		        proximityList.add("500");
+		        proximityList.add("1000");
+		        proximityList.add("1500");
+		        proximityList.add("2000");
+		        proximityList.add("5000");
+		        proximityList.add("10000");
+
+		        // convert to simple array
+		        popUpContents = new String[proximityList.size()];
+		        proximityList.toArray(popUpContents);
+	        }
+	        else 
+	        	if(position == 1) {
+	        		List<String> FontSize =  new ArrayList<String>();
+	        		
+	        		FontSize.add("Small");
+	        		FontSize.add("Medium");
+	        		FontSize.add("Large");
+	        		
+	        		popUpContents = new String[FontSize.size()];
+	        		FontSize.toArray(popUpContents);
+	        	}
 	       
 	        // set our adapter and pass our pop up window contents
-	        listViewDogs.setAdapter(dogsAdapter(popUpContents));
+	        listView.setAdapter(popupAdapter(popUpContents));
 	       
 	        // set the item click listener
-	        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
+	        listView.setOnItemClickListener(new DropdownOnItemClickListener());
 
 	        // some other visual settings
 	        popupWindow.setFocusable(true);
@@ -169,17 +180,18 @@ public class BookViewerActivity extends Activity {
 	        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 	       
 	        // set the list view as pop up window content
-	        popupWindow.setContentView(listViewDogs);
+	        popupWindow.setContentView(listView);
 
 	        return popupWindow;
 	    }
 	 
 	 
-	 public class DogsDropdownOnItemClickListener implements OnItemClickListener {
+	 public class DropdownOnItemClickListener implements OnItemClickListener {
 		    
 		    @Override
-		    public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+		   public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
 
+		    	String a = arg0.toString();
 		        // get the context and main activity to access variables
 		        Context mContext = v.getContext();
 		        BookViewerActivity mainActivity = ((BookViewerActivity) mContext);
@@ -190,7 +202,7 @@ public class BookViewerActivity extends Activity {
 		        v.startAnimation(fadeInAnimation);
 		        
 		        // dismiss the pop up
-		        mainActivity.popupWindowDogs.dismiss();
+		        mainActivity.popupWindow.dismiss();
 		        
 		        // get the text and set it as the button text
 		        
@@ -200,7 +212,7 @@ public class BookViewerActivity extends Activity {
 		    }
 
 		}
-	 private ArrayAdapter<String> dogsAdapter(String dogsArray[]) {
+	 private ArrayAdapter<String> popupAdapter(String dogsArray[]) {
 
 	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dogsArray) {
 
@@ -248,8 +260,8 @@ public class BookViewerActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// display view for selected nav drawer item
-			popupWindowDogs.showAsDropDown(view, -5, 0);
+			popupWindow(position);
+			popupWindow.showAsDropDown(view, -5, 0);
 		}
 	}
 
