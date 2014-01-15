@@ -4,8 +4,6 @@ import interface_module.slinding_menu.NavDrawerItem;
 import interface_module.slinding_menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -30,8 +28,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.project.mappingbooks.R;
 
 @SuppressLint("NewApi")
@@ -53,67 +49,60 @@ public class BookViewerActivity extends Activity {
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
 	String popUpContents[];
-	PopupWindow popupWindow;   
+	PopupWindow popupWindow;
+	int currentOptionChoosed;
+	int fontSize;
+	int proximity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		TextView t = (TextView) findViewById(R.id.book_text);
 		t.append("Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt! Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!");
 		t.setMovementMethod(new ScrollingMovementMethod());
-		
-		 mDrawerList.setAdapter(new MyAddapter(BookViewerActivity.this));
-		 
-		mTitle = mDrawerTitle = getTitle();
 
-		// load slide menu items
-		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-
-		// nav drawer icons from resources
-		navMenuIcons = getResources()
-				.obtainTypedArray(R.array.nav_drawer_icons);
-
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-
-		navDrawerItems = new ArrayList<NavDrawerItem>();
-
-		// adding nav drawer items to array
-		// Home
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-		// Find People
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-		// Photos
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-		// Communities, Will add a counter here
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
-		// Pages
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-		// What's hot, We  will add a counter here
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1), true, "50+"));
-		
-
-		// Recycle the typed array
-		navMenuIcons.recycle();
-
-		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-
-		// setting the nav drawer list adapter
-		adapter = new NavDrawerListAdapter(getApplicationContext(),
-				navDrawerItems);
-		mDrawerList.setAdapter(adapter);
+		buildLeftSlidingMenu();
 
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-		
+
+	}
+
+	private void buildLeftSlidingMenu() {
+		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+		mDrawerList.setAdapter(new DrawerAdapter(BookViewerActivity.this));
+		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
+		mTitle = mDrawerTitle = getTitle();
+
+		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);// load
+																				// slide
+																				// menu
+																				// items
+		navMenuIcons = getResources()
+				.obtainTypedArray(R.array.nav_drawer_icons);// nav drawer icons
+															// from resources
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		navDrawerItems = new ArrayList<NavDrawerItem>();
+
+		// adding nav drawer items to array
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons
+				.getResourceId(0, -1))); // Proximity
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons
+				.getResourceId(1, -1))); // Font
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons
+				.getResourceId(2, -1))); // Save
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons
+				.getResourceId(3, -1), true, "22")); // Exit
+		navMenuIcons.recycle();// Recycle the typed array
+		adapter = new NavDrawerListAdapter(getApplicationContext(),
+				navDrawerItems);// setting the nav drawer list adapter
+		mDrawerList.setAdapter(adapter);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, //nav menu toggle icon
-				R.string.app_name, // nav drawer open - description for accessibility
-				R.string.app_name // nav drawer close - description for accessibility
-		) {
+				R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(mTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
@@ -127,131 +116,110 @@ public class BookViewerActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		if (savedInstanceState == null) {
-			// on first time display view for first nav item
-			
-		}
 	}
-	
-	
-	 public PopupWindow popupWindow(int position) {
 
-	        // initialize a pop up window type
-	        popupWindow = new PopupWindow(this);
+	public void createPopupWindow(int position, View parentView) {
+		popupWindow = new PopupWindow(this);
+		currentOptionChoosed = position;
+		ListView listView = new ListView(this);
+		ArrayList<String> items = new ArrayList<String>();
+		if (position == 0) {
+			items.add("500");
+			items.add("1000");
+			items.add("1500");
+			items.add("2000");
+			items.add("5000");
+			items.add("10000");
+		} else if (position == 1) {
+			items.add("Small");
+			items.add("Medium");
+			items.add("Large");
+		}
+		// convert to simple array
+		popUpContents = new String[items.size()];
+		items.toArray(popUpContents);
+		// set our adapter and pass our pop up window contents
+		listView.setAdapter(popupAdapter(popUpContents));
+		// set the item click listener
+		listView.setOnItemClickListener(new DropdownOnItemClickListener());
+		// some other visual settings
+		popupWindow.setFocusable(true);
+		popupWindow.setWidth(parentView.getWidth());
+		popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+		// set the list view as pop up window content
+		popupWindow.setContentView(listView);
+	}
 
-	        // the drop down list is a list view
-	        ListView listView = new ListView(this);
-	        
-	        if(position == 0) {
-	        	List<String> proximityList = new ArrayList<String>();
-		        proximityList.add("500");
-		        proximityList.add("1000");
-		        proximityList.add("1500");
-		        proximityList.add("2000");
-		        proximityList.add("5000");
-		        proximityList.add("10000");
+	public class DropdownOnItemClickListener implements OnItemClickListener {
 
-		        // convert to simple array
-		        popUpContents = new String[proximityList.size()];
-		        proximityList.toArray(popUpContents);
-	        }
-	        else 
-	        	if(position == 1) {
-	        		List<String> FontSize =  new ArrayList<String>();
-	        		
-	        		FontSize.add("Small");
-	        		FontSize.add("Medium");
-	        		FontSize.add("Large");
-	        		
-	        		popUpContents = new String[FontSize.size()];
-	        		FontSize.toArray(popUpContents);
-	        	}
-	       
-	        // set our adapter and pass our pop up window contents
-	        listView.setAdapter(popupAdapter(popUpContents));
-	       
-	        // set the item click listener
-	        listView.setOnItemClickListener(new DropdownOnItemClickListener());
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+			switch (currentOptionChoosed) {
+			case 0:
+				proximity = Integer.parseInt(popUpContents[arg2]);
+				break;
+			case 1:
+				fontSize = Integer.parseInt(popUpContents[arg2]);
+				break;
+			default:
+				break;
+			}
+			// get the context and main activity to access variables
+			Context mContext = v.getContext();
+			BookViewerActivity mainActivity = ((BookViewerActivity) mContext);
 
-	        // some other visual settings
-	        popupWindow.setFocusable(true);
-	        popupWindow.setWidth(250);
-	        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-	       
-	        // set the list view as pop up window content
-	        popupWindow.setContentView(listView);
+			// add some animation when a list item was clicked
+			Animation fadeInAnimation = AnimationUtils.loadAnimation(
+					v.getContext(), android.R.anim.fade_in);
+			fadeInAnimation.setDuration(10);
+			v.startAnimation(fadeInAnimation);
 
-	        return popupWindow;
-	    }
-	 
-	 
-	 public class DropdownOnItemClickListener implements OnItemClickListener {
-		    
-		    @Override
-		   public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-
-		    	String a = arg0.toString();
-		        // get the context and main activity to access variables
-		        Context mContext = v.getContext();
-		        BookViewerActivity mainActivity = ((BookViewerActivity) mContext);
-		        
-		        // add some animation when a list item was clicked
-		        Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
-		        fadeInAnimation.setDuration(10);
-		        v.startAnimation(fadeInAnimation);
-		        
-		        // dismiss the pop up
-		        mainActivity.popupWindow.dismiss();
-		        
-		        // get the text and set it as the button text
-		        
-		        Toast.makeText(mContext, "Selected Positon is: " + arg2, 100).show();
-		        
-		        
-		    }
+			// dismiss the pop up
+			mainActivity.popupWindow.dismiss();
 
 		}
-	 private ArrayAdapter<String> popupAdapter(String dogsArray[]) {
 
-	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dogsArray) {
+	}
 
-	            @Override
-	            public View getView(int position, View convertView, ViewGroup parent) {
+	private ArrayAdapter<String> popupAdapter(String dogsArray[]) {
 
-	                // setting the ID and text for every items in the list
-	                           
-	                String text = getItem(position);               
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, dogsArray) {
 
-	                // visual settings for the list item
-	                TextView listItem = new TextView(BookViewerActivity.this);
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
 
-	                listItem.setText(text);
-	                listItem.setTag(position);
-	                listItem.setTextSize(22);
-	                listItem.setPadding(10, 10, 10, 10);
-	                listItem.setTextColor(Color.WHITE);
-	               
-	                return listItem;
-	            }
-	        };
-	       
-	        return adapter;
-	    }
-	
+				// setting the ID and text for every items in the list
 
+				String text = getItem(position);
+
+				// visual settings for the list item
+				TextView listItem = new TextView(BookViewerActivity.this);
+
+				listItem.setText(text);
+				listItem.setTag(position);
+				listItem.setTextSize(22);
+				listItem.setPadding(10, 10, 10, 10);
+				listItem.setTextColor(Color.WHITE);
+
+				return listItem;
+			}
+		};
+
+		return adapter;
+	}
 
 	/**
 	 * Menu for previous/next pages
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main_activity_actions, menu);
-	    return super.onCreateOptionsMenu(menu);
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	/**
 	 * Slide menu item click listener
 	 * */
@@ -260,8 +228,19 @@ public class BookViewerActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			popupWindow(position);
-			popupWindow.showAsDropDown(view, -5, 0);
+			switch (position) {
+			case 0:
+			case 1:
+				createPopupWindow(position, view);
+				popupWindow.showAsDropDown(view, -5, 0);
+				break;
+			case 2://TODO: asynctask for saving preferences
+				break;
+			case 3:
+				finish();
+			default:
+				break;
+			}
 		}
 	}
 
@@ -281,21 +260,6 @@ public class BookViewerActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	/* *
-	 * Called when invalidateOptionsMenu() is triggered
-	 */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	/**
-	 * Diplaying fragment view for selected nav drawer list item
-	 * */
-	
-
-		
 
 	@Override
 	public void setTitle(CharSequence title) {
