@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -46,8 +47,26 @@ public class RegisterActivity extends Activity {
 		confirmPasswordEditText = (EditText) findViewById(R.id.confirm_input_password);
 		setLimit(confirmPasswordEditText);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

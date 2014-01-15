@@ -52,34 +52,21 @@
             android:id="@+id/footer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" >
+            android:layout_alignParentBottom="true" 
+            android:gravity="center_horizontal">
 
             <Button
                 android:id="@+id/register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                
                 android:background="@null"
                 android:fontFamily="sans-serif"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
                 android:onClick="createAccount"
                 android:text="@string/register"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/forgot_password_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:background="@null"
-                android:fontFamily="sans-serif"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:onClick="forgotPassword"
-                android:text="@string/forgot"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />

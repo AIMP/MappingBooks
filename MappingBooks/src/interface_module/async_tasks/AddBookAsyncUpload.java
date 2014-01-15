@@ -1,6 +1,6 @@
 package interface_module.async_tasks;
 
-import interface_module.LoginActivity;
+import interface_module.BookListActivity;
 import interface_module.NetworkManager;
 
 import java.io.BufferedReader;
@@ -17,20 +17,15 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import android.view.View;
 
-public class LoginAsyncTask extends AsyncTask<String, Void, String> {
-	protected LoginActivity activity;
+public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
 
-	public LoginAsyncTask(LoginActivity activity) {
+	protected BookListActivity activity;
+
+	public AddBookAsyncUpload(BookListActivity activity) {
 		this.activity = activity;
 	}
-
-	@Override
-	protected void onPreExecute() {
-		this.activity.getProgressBar().setVisibility(View.VISIBLE);
-	}
-
+	
 	@Override
 	protected String doInBackground(String... params) {
 		try {
@@ -38,9 +33,9 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
 			String URL = null;
 			if (params.length == 2) { // login
 				type = new String[2];
-				type[0] = "email";
-				type[1] = "password";
-				URL = "http://192.168.0.103:3000/client/login";// https://ia_clientserver-c9-icaliman.c9.io/client/login
+				type[0] = "sessionID";
+				type[1] = "qrcode";
+				URL = "http://192.168.0.103:3000/client/addBook";// https://ia_clientserver-c9-icaliman.c9.io/client/addBook
 			}
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new
@@ -82,9 +77,9 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		this.activity.getProgressBar().setVisibility(View.INVISIBLE);
-		if (result != null)
-			this.activity.handleResponse(result);
-
+		if(this.activity!=null) {
+			this.activity.handleUploadResponse(result);
+		}
 	}
+
 }

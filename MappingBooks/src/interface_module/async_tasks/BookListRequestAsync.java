@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import com.project.mappingbooks.R;
 
+
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -39,7 +41,7 @@ public class BookListRequestAsync extends
 	protected ArrayList<RowItem> doInBackground(String... params) {
 		try {
 			String postSessionID = "sessionID";
-			String URL = "http://192.168.0.106:3000/client/getUserBooks";// https://ia_clientserver-c9-icaliman.c9.io/client/login
+			String URL = "http://192.168.0.103:3000/client/getUserBooks";// https://ia_clientserver-c9-icaliman.c9.io/client/login
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new
 			// DefaultHttpClient();
@@ -114,11 +116,12 @@ public class BookListRequestAsync extends
 				JSONArray bookListArray = rootObject.getJSONArray("books");
 				for (int i = 0; i < bookListArray.length(); i++) {
 					JSONObject bookObject = bookListArray.getJSONObject(i);
-					String bookID = bookObject.getString("bookID");
+					String bookID = bookObject.getString("_id");
+					String bookYear = bookObject.getString("bookYear");
 					String bookTitle = bookObject.getString("bookTitle");
-					RowItem book = new RowItem(R.drawable.book, bookTitle,
-							bookID);
-					books.add(book);
+					String bookAuthor = bookObject.getString("bookAuthor");
+					
+					books.add(new RowItem(R.drawable.book,bookTitle,bookAuthor,bookYear,bookID));
 				}
 			} else {
 				books = null;

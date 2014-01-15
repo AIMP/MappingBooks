@@ -50,8 +50,6 @@ public class LoginActivity extends Activity {
 	}
 
 	public void createAccount(View view) {
-		Intent intent = new Intent(this, RegisterActivity.class);
-		startActivity(intent);
 		if (view.getId() == R.id.register_button) {
 			Intent i = new Intent(this, RegisterActivity.class);
 			startActivity(i);
