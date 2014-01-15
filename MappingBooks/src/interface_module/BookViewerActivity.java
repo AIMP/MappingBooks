@@ -4,11 +4,14 @@ import interface_module.slinding_menu.NavDrawerItem;
 import interface_module.slinding_menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -17,9 +20,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.project.mappingbooks.R;
 
@@ -41,6 +52,8 @@ public class BookViewerActivity extends Activity {
 
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
+	String popUpContents[];
+	PopupWindow popupWindowDogs;   
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +64,22 @@ public class BookViewerActivity extends Activity {
 		t.append("Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt! Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!");
 		t.setMovementMethod(new ScrollingMovementMethod());
 		
+		 mDrawerList.setAdapter(new MyAddapter(BookViewerActivity.this));
+		 
+		 List<String> dogsList = new ArrayList<String>();
+	        dogsList.add("Samsung");
+	        dogsList.add("Google");
+	        dogsList.add("Yahoo");
+	        dogsList.add("Microsoft");
+
+	        // convert to simple array
+	        popUpContents = new String[dogsList.size()];
+	        dogsList.toArray(popUpContents);
+
+	        /*
+	         * initialize pop up window
+	         */
+	    popupWindowDogs = popupWindowDogs();
 		mTitle = mDrawerTitle = getTitle();
 
 		// load slide menu items
@@ -118,6 +147,87 @@ public class BookViewerActivity extends Activity {
 			
 		}
 	}
+	
+	
+	 public PopupWindow popupWindowDogs() {
+
+	        // initialize a pop up window type
+	        PopupWindow popupWindow = new PopupWindow(this);
+
+	        // the drop down list is a list view
+	        ListView listViewDogs = new ListView(this);
+	       
+	        // set our adapter and pass our pop up window contents
+	        listViewDogs.setAdapter(dogsAdapter(popUpContents));
+	       
+	        // set the item click listener
+	        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
+
+	        // some other visual settings
+	        popupWindow.setFocusable(true);
+	        popupWindow.setWidth(250);
+	        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+	       
+	        // set the list view as pop up window content
+	        popupWindow.setContentView(listViewDogs);
+
+	        return popupWindow;
+	    }
+	 
+	 
+	 public class DogsDropdownOnItemClickListener implements OnItemClickListener {
+		    
+		    @Override
+		    public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+
+		        // get the context and main activity to access variables
+		        Context mContext = v.getContext();
+		        BookViewerActivity mainActivity = ((BookViewerActivity) mContext);
+		        
+		        // add some animation when a list item was clicked
+		        Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
+		        fadeInAnimation.setDuration(10);
+		        v.startAnimation(fadeInAnimation);
+		        
+		        // dismiss the pop up
+		        mainActivity.popupWindowDogs.dismiss();
+		        
+		        // get the text and set it as the button text
+		        
+		        Toast.makeText(mContext, "Selected Positon is: " + arg2, 100).show();
+		        
+		        
+		    }
+
+		}
+	 private ArrayAdapter<String> dogsAdapter(String dogsArray[]) {
+
+	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dogsArray) {
+
+	            @Override
+	            public View getView(int position, View convertView, ViewGroup parent) {
+
+	                // setting the ID and text for every items in the list
+	                           
+	                String text = getItem(position);               
+
+	                // visual settings for the list item
+	                TextView listItem = new TextView(BookViewerActivity.this);
+
+	                listItem.setText(text);
+	                listItem.setTag(position);
+	                listItem.setTextSize(22);
+	                listItem.setPadding(10, 10, 10, 10);
+	                listItem.setTextColor(Color.WHITE);
+	               
+	                return listItem;
+	            }
+	        };
+	       
+	        return adapter;
+	    }
+	
+
 
 	/**
 	 * Menu for previous/next pages
@@ -139,7 +249,7 @@ public class BookViewerActivity extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// display view for selected nav drawer item
-			
+			popupWindowDogs.showAsDropDown(view, -5, 0);
 		}
 	}
 
