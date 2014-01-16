@@ -101,7 +101,7 @@ public class BookViewerActivity extends FragmentActivity {
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons
 				.getResourceId(2, -1))); // Save
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons
-				.getResourceId(3, -1), true, "22")); // Exit
+				.getResourceId(3, -1))); // Exit
 		navMenuIcons.recycle();// Recycle the typed array
 		adapter = new NavDrawerListAdapter(getApplicationContext(),
 				navDrawerItems);// setting the nav drawer list adapter
