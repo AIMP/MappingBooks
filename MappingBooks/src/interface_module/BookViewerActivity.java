@@ -5,13 +5,13 @@ import interface_module.slinding_menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
@@ -28,21 +28,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.project.mappingbooks.R;
 
 @SuppressLint("NewApi")
-public class BookViewerActivity extends Activity {
+public class BookViewerActivity extends FragmentActivity {
 	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
+	private ListView mLeftListView;
+	private View mRightView;
+	private GoogleMap map;
 	private ActionBarDrawerToggle mDrawerToggle;
-
-	// nav drawer title
 	private CharSequence mDrawerTitle;
-
-	// used to store app title
 	private CharSequence mTitle;
-
-	// slide menu items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
@@ -57,13 +61,14 @@ public class BookViewerActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_book_viewer);
 
 		TextView t = (TextView) findViewById(R.id.book_text);
 		t.append("Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt! Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!");
 		t.setMovementMethod(new ScrollingMovementMethod());
-
+		
 		buildLeftSlidingMenu();
+		buildRightSlidingMenu();
 
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -72,9 +77,9 @@ public class BookViewerActivity extends Activity {
 	}
 
 	private void buildLeftSlidingMenu() {
-		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-		mDrawerList.setAdapter(new DrawerAdapter(BookViewerActivity.this));
-		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+		mLeftListView = (ListView) findViewById(R.id.list_slidermenu);
+		mLeftListView.setAdapter(new DrawerAdapter(BookViewerActivity.this));
+		mLeftListView.setOnItemClickListener(new SlideMenuClickListener());
 
 		mTitle = mDrawerTitle = getTitle();
 
@@ -100,22 +105,53 @@ public class BookViewerActivity extends Activity {
 		navMenuIcons.recycle();// Recycle the typed array
 		adapter = new NavDrawerListAdapter(getApplicationContext(),
 				navDrawerItems);// setting the nav drawer list adapter
-		mDrawerList.setAdapter(adapter);
+		mLeftListView.setAdapter(adapter);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
-				// calling onPrepareOptionsMenu() to show action bar icons
-				invalidateOptionsMenu();
+				getActionBar().setTitle(getTitle());
+				supportInvalidateOptionsMenu(); // creates call to
+												// onPrepareOptionsMenu()
+				mDrawerToggle.syncState();
 			}
 
-			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
-				// calling onPrepareOptionsMenu() to hide action bar icons
-				invalidateOptionsMenu();
+			public void onDrawerOpened(View view) {
+				getActionBar().setTitle(getString(R.string.app_name));
+				supportInvalidateOptionsMenu(); // creates call to
+												// onPrepareOptionsMenu()
+				mDrawerToggle.syncState();
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	private void buildRightSlidingMenu() {
+		mRightView = findViewById(R.id.leftView);
+		map = ((SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.map)).getMap();
+
+	}
+
+	private void showMap(LatLng latLng) {
+
+		map = ((SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.map)).getMap();
+
+		@SuppressWarnings("unused")
+		Marker kiel = map.addMarker(new MarkerOptions().position(latLng)
+				.title("Iasi").snippet("Iasi is cool")
+		/*
+		 * .icon(BitmapDescriptorFactory .fromResource(R.drawable.ic_launcher))
+		 */);
+
+		// map.moveCamera(CameraUpdateFactory.newLatLngZoom(IASI,10));
+
+		// map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+		CameraPosition cameraPosition = new CameraPosition.Builder()
+				.target(latLng).zoom(10).bearing(90).tilt(30).build();
+
+		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 
 	public void createPopupWindow(int position, View parentView) {
@@ -234,7 +270,7 @@ public class BookViewerActivity extends Activity {
 				createPopupWindow(position, view);
 				popupWindow.showAsDropDown(view, -5, 0);
 				break;
-			case 2://TODO: asynctask for saving preferences
+			case 2:// TODO: asynctask for saving preferences
 				break;
 			case 3:
 				finish();
@@ -246,15 +282,34 @@ public class BookViewerActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// toggle nav drawer on selecting action bar app icon/title
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
+
 		// Handle action bar actions click
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			if(mDrawerLayout.isDrawerOpen(mRightView)) {
+				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
+				mDrawerLayout.closeDrawer(mRightView);
+			} else if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
+				mDrawerLayout.closeDrawer(mLeftListView);
+			} else {
+				mDrawerLayout.openDrawer(mLeftListView);
+			}
+			
 		case R.id.action_settings:
 			return true;
 		case R.id.action_previous:
+			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
+				mDrawerLayout.closeDrawer(mLeftListView);
+			}
+			if (mDrawerLayout.isDrawerOpen(mRightView)) {
+				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
+				mDrawerLayout.closeDrawer(mRightView);
+			} else {
+				mDrawerLayout.openDrawer(mRightView);
+				mDrawerLayout.setDrawerLockMode(
+						DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
+			}
+			return true;
 		case R.id.action_next:
 		default:
 			return super.onOptionsItemSelected(item);
@@ -284,6 +339,14 @@ public class BookViewerActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	public GoogleMap getMap() {
+		return map;
+	}
+
+	public void setMap(GoogleMap map) {
+		this.map = map;
 	}
 
 }
