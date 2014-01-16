@@ -27,9 +27,9 @@ public class LoginActivity extends Activity {
 	private int limit;
 	private String sessionID;
 	private final String TAG_STATUS = "status";
-	//private final String TAG_ERROR = "errorCode";
+	// private final String TAG_ERROR = "errorCode";
 	private final String TAG_SESSIONID = "sessionId";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,10 +50,10 @@ public class LoginActivity extends Activity {
 	}
 
 	public void createAccount(View view) {
-		if (view.getId() == R.id.register_button) {
-			Intent i = new Intent(this, RegisterActivity.class);
-			startActivity(i);
-		}
+		 if (view.getId() == R.id.register_button) {
+		 Intent i = new Intent(this, RegisterActivity.class);
+		 startActivity(i);
+		 }
 	}
 
 	public void forgotPassword(View view) {
@@ -119,8 +119,7 @@ public class LoginActivity extends Activity {
 	 * @param response
 	 */
 	public void handleResponse(String response) {
-		
-		
+
 		try {
 			JSONObject responseObject = new JSONObject(response);
 			String status = responseObject.getString(TAG_STATUS);
@@ -148,9 +147,8 @@ public class LoginActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
 
 	public String getSessionID() {
 		return sessionID;
