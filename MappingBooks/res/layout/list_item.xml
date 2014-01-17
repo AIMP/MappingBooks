@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:layout_centerInParent="true"
+    android:background="@drawable/rounded_corners" >
+
+    <ImageView
+        android:id="@+id/line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingRight="12dp"
+        android:paddingTop="3dp"
+        android:src="@drawable/line1" 
+        android:contentDescription="@string/icon_description"/>
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingTop="15dp"
+        android:src="@drawable/arrow"
+         android:contentDescription="@string/icon_description" />
+
     <ImageView
         android:id="@+id/icon"
         android:layout_width="40dp"
@@ -9,25 +31,25 @@
         android:contentDescription="@string/image"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
- 
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/icon"
+        android:paddingBottom="3dp"
         android:paddingTop="5dp"
-         android:paddingBottom="3dp"
-        android:textColor="#B30000"
+        android:textColor="#FFFFFF"
         android:textSize="17sp" />
- 
+
     <TextView
         android:id="@+id/desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
-        android:layout_toRightOf="@+id/icon"
+        android:paddingBottom="3dp"
         android:paddingLeft="10dp"
-         android:paddingBottom="3dp"
-        android:textColor="#000000"
-        android:textSize="12sp" />
+        android:textColor="#FFFFFF"
+        android:textSize="10sp" />
+
 </RelativeLayout>

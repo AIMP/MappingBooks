@@ -47,6 +47,9 @@ public class BookListActivity extends ListActivity {
 		if (extras != null) {
 			String sessionID = extras.getString("sessionID");
 			this.setSessionID(sessionID);
+			String username = extras.getString("username");
+			if (username != null)
+				setTitle(username);
 			try {
 				new BookListRequestAsync(this).execute(getSessionID()).get();
 			} catch (InterruptedException e) {
@@ -93,11 +96,12 @@ public class BookListActivity extends ListActivity {
 	}
 
 	@Override
-	protected void onListItemClick (ListView l, View v, int position, long id) {
-		Intent bookViewerIntent = new Intent(getApplicationContext(), BookViewerActivity.class);
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Intent bookViewerIntent = new Intent(getApplicationContext(),
+				BookViewerActivity.class);
 		startActivity(bookViewerIntent);
 	}
-	 
+
 	public void scanNow() {
 		IntentIntegrator integrator = new IntentIntegrator(this);
 		integrator.initiateScan();

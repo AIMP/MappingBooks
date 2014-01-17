@@ -29,7 +29,7 @@ public class LoginActivity extends Activity {
 	private final String TAG_STATUS = "status";
 	// private final String TAG_ERROR = "errorCode";
 	private final String TAG_SESSIONID = "sessionId";
-
+	private String username;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,7 +62,7 @@ public class LoginActivity extends Activity {
 
 	public void login(View view) {
 		if (view.getId() == R.id.login_button) {
-			String username = userNameEditText.getText().toString();
+			 username = userNameEditText.getText().toString();
 			String password = passwordEditText.getText().toString();
 			try {
 				new LoginAsyncTask(this).execute(
@@ -127,6 +127,7 @@ public class LoginActivity extends Activity {
 				setSessionID(responseObject.getString(TAG_SESSIONID));
 				Intent bookListIntent = new Intent(getApplicationContext(),
 						BookListActivity.class);
+				bookListIntent.putExtra("username", username);
 				bookListIntent.putExtra("sessionID", getSessionID());
 				startActivity(bookListIntent);
 			} else {
