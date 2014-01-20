@@ -17,6 +17,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -82,12 +83,34 @@ public class BookListActivity extends ListActivity {
 			scanNow();
 			return true;
 		case R.id.logout_button: {
-			Intent myIntent = new Intent(BookListActivity.this,
-					LoginActivity.class);
-			myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);// clear back
-																// stack
-			startActivity(myIntent);
-			finish();
+			Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Logout")
+					.setMessage("Do you want to log out?")
+					.setPositiveButton("YES",
+							new AlertDialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent myIntent = new Intent(
+											BookListActivity.this,
+											LoginActivity.class);
+									myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);// clear
+																						// back
+																						// stack
+									startActivity(myIntent);
+									finish();
+								}
+							})
+					.setNegativeButton("NO", new AlertDialog.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+
+						}
+
+					});
+			AlertDialog dialog = builder.create();
+			dialog.show();
 			return true;
 		}
 		default:

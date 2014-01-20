@@ -80,9 +80,9 @@ public class BookViewerActivity extends FragmentActivity {
 		mLeftListView = (ListView) findViewById(R.id.list_slidermenu);
 		mLeftListView.setAdapter(new DrawerAdapter(BookViewerActivity.this));
 		mLeftListView.setOnItemClickListener(new SlideMenuClickListener());
-
-		mTitle = mDrawerTitle = getTitle();
-
+		
+		mTitle = getTitle();
+        mDrawerTitle = "Menu";
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);// load
 																				// slide
 																				// menu
