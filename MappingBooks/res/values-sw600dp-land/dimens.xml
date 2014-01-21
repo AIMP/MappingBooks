@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="login_register_textfield_left_right_margin">200dp</dimen>
+	<dimen name="login_register_header_top_margin">20dp</dimen>
+	<dimen name="login_register_text_size">20sp</dimen>
+</resources>
