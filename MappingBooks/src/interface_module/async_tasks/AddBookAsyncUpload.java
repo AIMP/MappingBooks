@@ -40,9 +40,9 @@ public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new
 			// DefaultHttpClient();
-			HttpConnectionParams
+			/*HttpConnectionParams
 					.setConnectionTimeout(client.getParams(), 10000); // Timeout
-																		// Limit
+																		// Limit*/
 			HttpResponse response;
 			JSONObject json = new JSONObject();
 

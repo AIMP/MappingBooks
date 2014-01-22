@@ -47,4 +47,8 @@
     <string name="noBooks">You don\'t have any book uploaded.</string>
     <string name="add_book">Add Book</string>
     <string name="logout">Logout</string>
+
+    <!-- Toast messages -->
+    <!-- TODO: Make sure these messages are appropriate -->
+    <string name="no_connection">Network connection unavailable</string>
 </resources>

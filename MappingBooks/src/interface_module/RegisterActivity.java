@@ -36,6 +36,8 @@ public class RegisterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.init(this);
+
 		setContentView(R.layout.activity_register);
 		limit = 50;
 		userNameEditText = (EditText) findViewById(R.id.input_username);

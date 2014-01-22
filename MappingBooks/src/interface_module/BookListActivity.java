@@ -42,6 +42,8 @@ public class BookListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.init(this);
+
 		setContentView(R.layout.activity_book_list);
 		rowItems = new ArrayList<RowItem>();
 		Bundle extras = getIntent().getExtras();

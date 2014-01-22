@@ -25,8 +25,15 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import android.os.Looper;
 import android.util.Log;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import com.project.mappingbooks.R;
 
 public class NetworkManager {
+	public static ConnectivityManager connectivityManager;
 
 	public static void sendJson(final String[] params) {
 
@@ -54,8 +61,8 @@ public class NetworkManager {
 					HttpPost post = new HttpPost(URL);
 					HttpClient client = getNewHttpClient();// new
 															// DefaultHttpClient();
-					HttpConnectionParams.setConnectionTimeout(
-							client.getParams(), 10000); // Timeout Limit
+					/*HttpConnectionParams.setConnectionTimeout(
+							client.getParams(), 10000); // Timeout Limit*/
 					HttpResponse response;
 					JSONObject json = new JSONObject();
 
@@ -94,6 +101,14 @@ public class NetworkManager {
 	}
 
 	public static HttpClient getNewHttpClient() {
+		/*
+		 * TODO: Make sure this conditional statement is appropriate.
+		 */
+		if (!isConnected()) {
+			Utils.toast(R.string.no_connection);
+			return null;
+		}
+
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore
 					.getDefaultType());
@@ -105,6 +120,7 @@ public class NetworkManager {
 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+			HttpConnectionParams.setConnectionTimeout(params, 10000);
 
 			SchemeRegistry registry = new SchemeRegistry();
 			registry.register(new Scheme("http", PlainSocketFactory
@@ -118,5 +134,28 @@ public class NetworkManager {
 		} catch (Exception e) {
 			return new DefaultHttpClient();
 		}
+	}
+
+	public static class Receiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean connected = NetworkManager.isConnected();
+			Utils.d(connected ? "Connected" : "DISCONNECTED");
+			if (!connected) Utils.toast(R.string.no_connection);
+		}
+	}
+
+	public static boolean isConnected() {
+		NetworkInfo netInfo = getActiveNetworkInfo();
+		return netInfo != null && netInfo.isConnectedOrConnecting();
+	}
+
+	public static NetworkInfo getActiveNetworkInfo() {
+		return connectivityManager.getActiveNetworkInfo();
+	}
+
+	public static void init(Context context) {
+		String service = Context.CONNECTIVITY_SERVICE;
+		connectivityManager = (ConnectivityManager) context.getSystemService(service);
 	}
 }

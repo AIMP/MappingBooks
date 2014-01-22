@@ -61,6 +61,8 @@ public class BookViewerActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.init(this);
+
 		setContentView(R.layout.activity_book_viewer);
 
 		TextView t = (TextView) findViewById(R.id.book_text);
