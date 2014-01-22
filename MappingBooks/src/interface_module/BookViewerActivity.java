@@ -49,7 +49,8 @@ public class BookViewerActivity extends FragmentActivity {
 	private CharSequence mTitle;
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
-
+	private boolean isTablet = false;
+	private boolean isPhone = false;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
 	String popUpContents[];
@@ -66,9 +67,18 @@ public class BookViewerActivity extends FragmentActivity {
 		TextView t = (TextView) findViewById(R.id.book_text);
 		t.append("Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt! Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!");
 		t.setMovementMethod(new ScrollingMovementMethod());
-		
+		String deviceType = getResources().getString(R.string.device);
 		buildLeftSlidingMenu();
-		buildRightSlidingMenu();
+		if (deviceType.equalsIgnoreCase("Smartphone")) {
+			isPhone = true;
+			buildRightSlidingMenu();
+		} else {
+			isTablet = true;
+			mRightView = findViewById(R.id.leftView);
+			map = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.map)).getMap();
+
+		}
 
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,9 +90,9 @@ public class BookViewerActivity extends FragmentActivity {
 		mLeftListView = (ListView) findViewById(R.id.list_slidermenu);
 		mLeftListView.setAdapter(new DrawerAdapter(BookViewerActivity.this));
 		mLeftListView.setOnItemClickListener(new SlideMenuClickListener());
-		
+
 		mTitle = getTitle();
-        mDrawerTitle = "Menu";
+		setmDrawerTitle("Menu");
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);// load
 																				// slide
 																				// menu
@@ -286,28 +296,36 @@ public class BookViewerActivity extends FragmentActivity {
 		// Handle action bar actions click
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if(mDrawerLayout.isDrawerOpen(mRightView)) {
-				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
-				mDrawerLayout.closeDrawer(mRightView);
-			} else if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
+			if (isPhone) {
+				if (mDrawerLayout.isDrawerOpen(mRightView)) {
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
+					mDrawerLayout.closeDrawer(mRightView);
+				}
+			}
+			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
 				mDrawerLayout.closeDrawer(mLeftListView);
 			} else {
 				mDrawerLayout.openDrawer(mLeftListView);
 			}
-			
+
+			return true;
 		case R.id.action_settings:
 			return true;
 		case R.id.action_previous:
 			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
 				mDrawerLayout.closeDrawer(mLeftListView);
 			}
-			if (mDrawerLayout.isDrawerOpen(mRightView)) {
-				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
-				mDrawerLayout.closeDrawer(mRightView);
-			} else {
-				mDrawerLayout.openDrawer(mRightView);
-				mDrawerLayout.setDrawerLockMode(
-						DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
+			if (isPhone) {
+				if (mDrawerLayout.isDrawerOpen(mRightView)) {
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
+					mDrawerLayout.closeDrawer(mRightView);
+				} else {
+					mDrawerLayout.openDrawer(mRightView);
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
+				}
 			}
 			return true;
 		case R.id.action_next:
@@ -347,6 +365,30 @@ public class BookViewerActivity extends FragmentActivity {
 
 	public void setMap(GoogleMap map) {
 		this.map = map;
+	}
+
+	public boolean isTablet() {
+		return isTablet;
+	}
+
+	public void setTablet(boolean isTablet) {
+		this.isTablet = isTablet;
+	}
+
+	public boolean isPhone() {
+		return isPhone;
+	}
+
+	public void setPhone(boolean isPhone) {
+		this.isPhone = isPhone;
+	}
+
+	public CharSequence getmDrawerTitle() {
+		return mDrawerTitle;
+	}
+
+	public void setmDrawerTitle(CharSequence mDrawerTitle) {
+		this.mDrawerTitle = mDrawerTitle;
 	}
 
 }

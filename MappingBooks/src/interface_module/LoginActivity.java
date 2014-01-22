@@ -61,20 +61,22 @@ public class LoginActivity extends Activity {
 	}
 
 	public void login(View view) {
-		if (view.getId() == R.id.login_button) {
-			 username = userNameEditText.getText().toString();
-			String password = passwordEditText.getText().toString();
-			try {
-				new LoginAsyncTask(this).execute(
-						new String[] { username, password }).get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		Intent i = new Intent(this, BookViewerActivity.class);
+		startActivity(i);
+//		if (view.getId() == R.id.login_button) {
+//			 username = userNameEditText.getText().toString();
+//			String password = passwordEditText.getText().toString();
+//			try {
+//				new LoginAsyncTask(this).execute(
+//						new String[] { username, password }).get();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	private void setLimit(final EditText text) {
