@@ -5,7 +5,7 @@
     <solid android:color="@color/white_transparency20" />
 
     <corners
-       android:radius="3dp" />
+       android:radius="@dimen/book_viewer_elements_corner_radius" />
 
     <padding
         android:bottom="10dp"

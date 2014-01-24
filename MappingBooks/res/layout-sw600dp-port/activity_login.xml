@@ -53,8 +53,8 @@
             android:id="@+id/footer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" 
-            android:gravity="center_horizontal">
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal" >
 
             <Button
                 android:id="@+id/register_button"
@@ -68,8 +68,7 @@
                 android:onClick="createAccount"
                 android:text="@string/register"
                 android:textColor="@color/white"
-                android:textSize="@dimen/login_register_text_size"
-                android:textStyle="bold" />
+                android:textSize="@dimen/login_register_text_size" />
         </LinearLayout>
         <!-- Footer Ends -->
 
