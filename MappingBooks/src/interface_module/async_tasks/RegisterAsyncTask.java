@@ -2,6 +2,7 @@ package interface_module.async_tasks;
 
 import interface_module.NetworkManager;
 import interface_module.RegisterActivity;
+import interface_module.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,7 +13,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
@@ -41,7 +41,7 @@ public class RegisterAsyncTask extends AsyncTask<String, Void, String> {
 				type[0] = "username";
 				type[1] = "email";
 				type[2] = "password";
-				URL = "http://192.168.0.103:3000/client/register";// https://ia_clientserver-c9-icaliman.c9.io/client/register
+				URL = "http://clientserver.aws.af.cm/client/register";// https://ia_clientserver-c9-icaliman.c9.io/client/register
 			}
 
 			HttpPost post = new HttpPost(URL);
@@ -76,8 +76,7 @@ public class RegisterAsyncTask extends AsyncTask<String, Void, String> {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
-
+			Utils.alertDialog("Register", "Cannot connect to server", this.activity);
 		}
 		return null;
 	}

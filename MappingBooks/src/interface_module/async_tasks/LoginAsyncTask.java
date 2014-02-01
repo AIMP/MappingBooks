@@ -12,7 +12,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
@@ -38,9 +37,9 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
 			String URL = null;
 			if (params.length == 2) { // login
 				type = new String[2];
-				type[0] = "email";
+				type[0] = "username";
 				type[1] = "password";
-				URL = "http://192.168.0.103:3000/client/login";// https://ia_clientserver-c9-icaliman.c9.io/client/login
+				URL = "http://clientserver.aws.af.cm/client/login";// https://ia_clientserver-c9-icaliman.c9.io/client/login
 			}
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new

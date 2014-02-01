@@ -28,7 +28,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/login_register_header_top_margin"
-                android:background="@drawable/logo_big"
+                android:src="@drawable/logo_big"
                 android:contentDescription="@string/icon_description" />
 
             <TextView

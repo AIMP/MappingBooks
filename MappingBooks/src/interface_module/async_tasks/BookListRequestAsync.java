@@ -41,7 +41,7 @@ public class BookListRequestAsync extends
 	protected ArrayList<RowItem> doInBackground(String... params) {
 		try {
 			String postSessionID = "sessionID";
-			String URL = "http://192.168.0.103:3000/client/getUserBooks";// https://ia_clientserver-c9-icaliman.c9.io/client/login
+			String URL = "http://clientserver.aws.af.cm/client/getUserBooks";// https://ia_clientserver-c9-icaliman.c9.io/client/login
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new
 			// DefaultHttpClient();

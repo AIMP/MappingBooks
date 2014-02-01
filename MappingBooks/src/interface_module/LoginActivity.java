@@ -2,10 +2,10 @@ package interface_module;
 
 import java.util.concurrent.ExecutionException;
 
+import interface_module.async_tasks.LoginAsyncTask;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import interface_module.async_tasks.LoginAsyncTask;
 
 import com.project.mappingbooks.R;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -24,12 +25,15 @@ public class LoginActivity extends Activity {
 	protected EditText userNameEditText;
 	protected EditText passwordEditText;
 	protected ProgressBar progressBar;
+	protected Button loginButton;
 	private int limit;
 	private String sessionID;
 	private final String TAG_STATUS = "status";
-	// private final String TAG_ERROR = "errorCode";
 	private final String TAG_SESSIONID = "sessionId";
+	protected boolean usernameFieldIsEmpty = true;
+	protected boolean passwordFieldIsEmpty = true;
 	private String username;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +43,8 @@ public class LoginActivity extends Activity {
 		userNameEditText = (EditText) findViewById(R.id.input_username);
 		passwordEditText = (EditText) findViewById(R.id.input_password);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		loginButton = (Button) findViewById(R.id.login_button);
+		loginButton.setEnabled(!usernameFieldIsEmpty & !passwordFieldIsEmpty);
 		limit = 50;
 		setLimit(userNameEditText);
 		setLimit(passwordEditText);
@@ -46,16 +52,14 @@ public class LoginActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
 
 	public void createAccount(View view) {
-		 if (view.getId() == R.id.register_button) {
-		 Intent i = new Intent(this, RegisterActivity.class);
-		 startActivity(i);
-		 }
+		if (view.getId() == R.id.register_button) {
+			Intent i = new Intent(this, RegisterActivity.class);
+			startActivity(i);
+		}
 	}
 
 	public void forgotPassword(View view) {
@@ -63,22 +67,21 @@ public class LoginActivity extends Activity {
 	}
 
 	public void login(View view) {
-		Intent i = new Intent(this, BookViewerActivity.class);
-		startActivity(i);
-//		if (view.getId() == R.id.login_button) {
-//			 username = userNameEditText.getText().toString();
-//			String password = passwordEditText.getText().toString();
-//			try {
-//				new LoginAsyncTask(this).execute(
-//						new String[] { username, password }).get();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (ExecutionException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+
+		if (view.getId() == R.id.login_button) {
+			username = userNameEditText.getText().toString();
+			String password = passwordEditText.getText().toString();
+			try {
+				new LoginAsyncTask(this).execute(
+						new String[] { username, password }).get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void setLimit(final EditText text) {
@@ -106,6 +109,21 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				if (s.length() > 0) {
+					if (text == passwordEditText) {
+						passwordFieldIsEmpty = false;
+					} else {
+						usernameFieldIsEmpty = false;
+					}
+				} else {
+					if (text == passwordEditText) {
+						passwordFieldIsEmpty = true;
+					} else {
+						usernameFieldIsEmpty = true;
+					}
+				}
+				loginButton.setEnabled(!passwordFieldIsEmpty
+						& !usernameFieldIsEmpty);
 				if (s.length() > limit) {
 					text.setText(s.subSequence(0, limit));
 				}
@@ -149,8 +167,8 @@ public class LoginActivity extends Activity {
 				dialog.show();
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Utils.alertDialog("Server Response",
+					"Unrecognized response received.", this);
 		}
 
 	}

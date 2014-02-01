@@ -15,26 +15,17 @@
             android:id="@+id/book_text"
             android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:background="@drawable/rounded_area"
             android:scrollbars="vertical" />
 
         <fragment
-            android:id="@+id/map_module7"
-            android:layout_width="match_parent"
+            android:id="@+id/map"
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             class="com.google.android.gms.maps.SupportMapFragment"
             android:background="@drawable/rounded_area" />
-
-        <fragment
-            android:id="@+id/map_module6"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:background="@drawable/rounded_area"
-            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Listview to display slider menu -->

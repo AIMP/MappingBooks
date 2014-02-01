@@ -35,7 +35,7 @@ public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
 				type = new String[2];
 				type[0] = "sessionID";
 				type[1] = "qrcode";
-				URL = "http://192.168.0.103:3000/client/addBook";// https://ia_clientserver-c9-icaliman.c9.io/client/addBook
+				URL = "http://clientserver.aws.af.cm/client/addBook";// https://ia_clientserver-c9-icaliman.c9.io/client/addBook
 			}
 			HttpPost post = new HttpPost(URL);
 			HttpClient client = NetworkManager.getNewHttpClient();// new
