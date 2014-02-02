@@ -1,5 +1,7 @@
 package maps_module;
 
+import interface_module.Place;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +94,7 @@ public class MapManager {
 	/*
 	 * Methods for the map from module 6
 	 */
+
 	private class AsyncRouteDraw extends
 			AsyncTask<Location, Void, PolylineOptions> {
 		@Override
@@ -139,6 +142,7 @@ public class MapManager {
 	}
 
 	private void addMarkersToMap() {
+		map.clear();
 		for (Location key : markers) {
 			drawMarker(key, "Locatiune", true);
 			Log.v("TAG/Marker", key.getLatitude() + ", " + key.getLongitude());

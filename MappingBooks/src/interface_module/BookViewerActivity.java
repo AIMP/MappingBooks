@@ -1,5 +1,7 @@
 package interface_module;
 
+import interface_module.async_tasks.LocationChangesRequestAsyncTask;
+import interface_module.async_tasks.ProximityRequestAsyncTask;
 import interface_module.slinding_menu.NavDrawerItem;
 import interface_module.slinding_menu.NavDrawerListAdapter;
 
@@ -7,11 +9,14 @@ import java.util.ArrayList;
 import maps_module.MapManager;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,22 +24,24 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -42,7 +49,7 @@ import com.project.mappingbooks.R;
 
 @SuppressLint("NewApi")
 public class BookViewerActivity extends FragmentActivity implements
-		LocationListener {
+		LocationListener, OnMenuItemClickListener {
 	private DrawerLayout mDrawerLayout;
 	private ListView mLeftListView;
 	private View mRightView;
@@ -56,19 +63,28 @@ public class BookViewerActivity extends FragmentActivity implements
 	private boolean isPhone = false;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	private NavDrawerListAdapter adapter;
-
-	 Animation slide_in_left, slide_out_right;
-	String popUpContents[];
-	PopupWindow popupWindow;
+	private TextView textview;
+	private String currentSessionID;
+	private String currentBookID;
+	private ArrayList<Place> nearByPlaces;
+	private SpannableStringBuilder stringBuilder;
+	PopupMenu popup;
 	int currentOptionChoosed;
-	int fontSize;
-	int proximity;
+	int fontSize = -1;
+	private double proximity = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Intent intent = getIntent();
+		Bundle extras = intent.getBundleExtra("extra");
+		if (extras != null) {
+			this.setCurrentBookID(extras.getString("bookID"));
+			this.setCurrentSessionID(extras.getString("sessionID"));
+		}
 		Utils.init(this);
 		setContentView(R.layout.activity_book_viewer);
+		stringBuilder = new SpannableStringBuilder();
 		LocationManager lm = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 		boolean gps = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -76,9 +92,9 @@ public class BookViewerActivity extends FragmentActivity implements
 		Log.v("TAG",
 				"GPS:" + String.valueOf(gps) + " Net:" + String.valueOf(net));
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 5, this);
-		TextView t = (TextView) findViewById(R.id.book_text);
-		t.append("Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt! Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!Aici sunt!");
-		t.setMovementMethod(new ScrollingMovementMethod());
+		textview = (TextView) findViewById(R.id.book_text);
+		textview.setMovementMethod(new ScrollingMovementMethod());
+		testSpannable();
 		String deviceType = getResources().getString(R.string.device);
 		buildLeftSlidingMenu();
 		if (deviceType.equalsIgnoreCase("Smartphone")) {
@@ -91,13 +107,69 @@ public class BookViewerActivity extends FragmentActivity implements
 					.findFragmentById(R.id.map)).getMap();
 
 		}
-		
-		MapManager.getInstance().linkWith(lm, map);
-		MapManager.getInstance().setup();
+		if (map != null) {
+			MapManager.getInstance().linkWith(lm, map);
+			MapManager.getInstance().setup();
+		}
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
+		new ProximityRequestAsyncTask(this, true).execute(new String[] { this
+				.getCurrentSessionID() });
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.metters500:
+			new ProximityRequestAsyncTask(this, false).execute(new String[] {
+					this.getCurrentSessionID(), String.valueOf(500) });
+			popup.dismiss();
+			return true;
+		case R.id.metters1000:
+			new ProximityRequestAsyncTask(this, false).execute(new String[] {
+					this.getCurrentSessionID(), String.valueOf(1000) });
+			popup.dismiss();
+			return true;
+		case R.id.metters2000:
+			new ProximityRequestAsyncTask(this, false).execute(new String[] {
+					this.getCurrentSessionID(), String.valueOf(2000) });
+			popup.dismiss();
+			return true;
+		case R.id.metters5000:
+			new ProximityRequestAsyncTask(this, false).execute(new String[] {
+					this.getCurrentSessionID(), String.valueOf(5000) });
+			popup.dismiss();
+			return true;
+		case R.id.metters10000:
+			new ProximityRequestAsyncTask(this, false).execute(new String[] {
+					this.getCurrentSessionID(), String.valueOf(10000) });
+			popup.dismiss();
+			return true;
+		case R.id.metters100000:
+			new ProximityRequestAsyncTask(this, false).execute(new String[] {
+					this.getCurrentSessionID(), String.valueOf(100000) });
+			popup.dismiss();
+			return true;
+		case R.id.small_font:
+			fontSize = 1;
+			textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+			item.setChecked(true);
+			return true;
+		case R.id.medium_font:
+			fontSize = 2;
+			textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			item.setChecked(true);
+			return true;
+		case R.id.large_font:
+			fontSize = 3;
+			textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+			item.setChecked(true);
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	private void buildLeftSlidingMenu() {
@@ -158,94 +230,43 @@ public class BookViewerActivity extends FragmentActivity implements
 	}
 
 	public void createPopupWindow(int position, View parentView) {
-		popupWindow = new PopupWindow(this);
 		currentOptionChoosed = position;
-		ListView listView = new ListView(this);
-		ArrayList<String> items = new ArrayList<String>();
 		if (position == 0) {
-			items.add("500");
-			items.add("1000");
-			items.add("1500");
-			items.add("2000");
-			items.add("5000");
-			items.add("10000");
+			popup = new PopupMenu(this, parentView);
+			MenuInflater inflater = popup.getMenuInflater();
+			inflater.inflate(R.menu.proximity_menu, popup.getMenu());
+			popup.setOnMenuItemClickListener(this);
+			if (proximity != -1) {
+				if (proximity == 100) {
+					popup.getMenu().getItem(0).setChecked(true);
+				} else if (proximity == 500) {
+					popup.getMenu().getItem(1).setChecked(true);
+				} else if (proximity == 1000) {
+					popup.getMenu().getItem(2).setChecked(true);
+				} else if (proximity == 2000) {
+					popup.getMenu().getItem(3).setChecked(true);
+				} else if (proximity == 5000) {
+					popup.getMenu().getItem(4).setChecked(true);
+				} else if (proximity == 10000) {
+					popup.getMenu().getItem(5).setChecked(true);
+				} else if (proximity == 100000) {
+					popup.getMenu().getItem(6).setChecked(true);
+				} else {
+					popup.getMenu().getItem(1).setChecked(true);
+				}
+
+			}
+			popup.show();
 		} else if (position == 1) {
-			items.add("Small");
-			items.add("Medium");
-			items.add("Large");
-		}
-		// convert to simple array
-		popUpContents = new String[items.size()];
-		items.toArray(popUpContents);
-		// set our adapter and pass our pop up window contents
-		listView.setAdapter(popupAdapter(popUpContents));
-		// set the item click listener
-		listView.setOnItemClickListener(new DropdownOnItemClickListener());
-		// some other visual settings
-		popupWindow.setFocusable(true);
-		popupWindow.setWidth(parentView.getWidth());
-		popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-		// set the list view as pop up window content
-		popupWindow.setContentView(listView);
-	}
-
-	public class DropdownOnItemClickListener implements OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-			switch (currentOptionChoosed) {
-			case 0:
-				proximity = Integer.parseInt(popUpContents[arg2]);
-				break;
-			case 1:
-				fontSize = Integer.parseInt(popUpContents[arg2]);
-				break;
-			default:
-				break;
+			popup = new PopupMenu(this, parentView);
+			MenuInflater inflater = popup.getMenuInflater();
+			inflater.inflate(R.menu.font_menu, popup.getMenu());
+			popup.setOnMenuItemClickListener(this);
+			if (fontSize != -1) {
+				popup.getMenu().getItem(fontSize - 1).setChecked(true);
 			}
-			// get the context and main activity to access variables
-			Context mContext = v.getContext();
-			BookViewerActivity mainActivity = ((BookViewerActivity) mContext);
-
-			// add some animation when a list item was clicked
-			Animation fadeInAnimation = AnimationUtils.loadAnimation(
-					v.getContext(), android.R.anim.fade_in);
-			fadeInAnimation.setDuration(10);
-			v.startAnimation(fadeInAnimation);
-
-			// dismiss the pop up
-			mainActivity.popupWindow.dismiss();
-
+			popup.show();
 		}
-
-	}
-
-	private ArrayAdapter<String> popupAdapter(String dogsArray[]) {
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, dogsArray) {
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-
-				// setting the ID and text for every items in the list
-
-				String text = getItem(position);
-
-				// visual settings for the list item
-				TextView listItem = new TextView(BookViewerActivity.this);
-
-				listItem.setText(text);
-				listItem.setTag(position);
-				listItem.setTextSize(22);
-				listItem.setPadding(10, 10, 10, 10);
-				listItem.setTextColor(Color.WHITE);
-
-				return listItem;
-			}
-		};
-
-		return adapter;
 	}
 
 	/**
@@ -271,7 +292,6 @@ public class BookViewerActivity extends FragmentActivity implements
 			case 0:
 			case 1:
 				createPopupWindow(position, view);
-				popupWindow.showAsDropDown(view, -5, 0);
 				break;
 			case 2:// TODO: asynctask for saving preferences
 				break;
@@ -381,9 +401,24 @@ public class BookViewerActivity extends FragmentActivity implements
 	@Override
 	public void onLocationChanged(Location l) {
 		MapManager.getInstance().setLocation(l);
+		new LocationChangesRequestAsyncTask(this).execute(new String[] {
+				this.getCurrentSessionID(), this.getCurrentBookID(),
+				String.valueOf(l.getLatitude()),
+				String.valueOf(l.getLongitude()) });
 		Log.v("TAG",
 				String.format("Location changed: Long:%f, Lat:%f",
 						(float) l.getLongitude(), (float) l.getLatitude()));
+	}
+
+	/**
+	 * Handler for new places received
+	 */
+	public void handleNewPlaces(ArrayList<Place> newPlaces) {
+		if (newPlaces == null)
+			return;
+		if (newPlaces.size() != 0) {
+			setNearByPlaces(newPlaces);
+		}
 	}
 
 	@Override
@@ -401,4 +436,101 @@ public class BookViewerActivity extends FragmentActivity implements
 		Log.v("TAG", "Status Changed");
 	}
 
+	public String getCurrentSessionID() {
+		return currentSessionID;
+	}
+
+	public void setCurrentSessionID(String currentSessionID) {
+		this.currentSessionID = currentSessionID;
+	}
+
+	public String getCurrentBookID() {
+		return currentBookID;
+	}
+
+	public void setCurrentBookID(String currentBookID) {
+		this.currentBookID = currentBookID;
+	}
+
+	public void setProximity(double proximity) {
+		this.proximity = proximity;
+	}
+
+	public ArrayList<Place> getNearByPlaces() {
+		return nearByPlaces;
+	}
+
+	public void setNearByPlaces(ArrayList<Place> nearByPlaces) {
+		this.nearByPlaces = nearByPlaces;
+		// TODO:call MapManager
+	}
+
+	public void testSpannable() {
+		String match = "cod";
+		String text = "Dispozitiile cod  prezentului cod reglementeaza raporturile patrimoniale si nepatrimoniale cod dintre persoane, ca  cod subiecte de drept civil. In sensul prezentului cod, prin uzante se intelege obiceiul (cutuma) si uzurile profesionale. ";
+
+		String[] sentence = text.split(" ");
+		for (String word : sentence) {
+			if (word.equals(match)) {
+				ArrayList<String> links = new ArrayList<String>();
+				links.add("Hello1");
+				links.add("Hello2");
+				appendHighlightedText(word + " ", links);
+
+			} else
+				appendNormalText(word + " ");
+		}
+
+		textview.setMovementMethod(LinkMovementMethod.getInstance());
+
+		textview.setText(stringBuilder, BufferType.SPANNABLE);
+	}
+
+	private void appendHighlightedText(final String text,
+			final ArrayList<String> links) {
+		int startPosition = stringBuilder.length();
+		stringBuilder.append(text);
+		stringBuilder.setSpan(new ForegroundColorSpan(Color.BLUE),
+				startPosition, startPosition + text.length(), 0);
+		ClickableSpan clickfor = new ClickableSpan() {
+
+			@Override
+			public void onClick(View clickfor) {
+				showDialogAlert(text, clickfor, links);
+			}
+		};
+
+		stringBuilder.setSpan(clickfor, startPosition,
+				startPosition + text.length(), 0);
+
+	}
+
+	private void appendNormalText(String text) {
+		stringBuilder.append(text);
+	}
+
+	public void showDialogAlert(String text, View btn, ArrayList<String> links) {
+		Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(text);
+		int i = 0;
+		String[] dialogLinks = new String[links.size()];
+		for (String link : links) {
+			dialogLinks[i++] = link;
+		}
+		builder.setItems(dialogLinks, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+		AlertDialog alertDialog = builder.create();
+		alertDialog.setCanceledOnTouchOutside(true);
+		alertDialog.show();
+		WindowManager.LayoutParams lp = alertDialog.getWindow().getAttributes();
+		lp.dimAmount = 0.0F;
+		alertDialog.getWindow().setAttributes(lp);
+		alertDialog.getWindow().addFlags(
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+	}
 }

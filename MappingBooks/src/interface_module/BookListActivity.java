@@ -124,6 +124,11 @@ public class BookListActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent bookViewerIntent = new Intent(getApplicationContext(),
 				BookViewerActivity.class);
+		RowItem book = adapter.getItem(position);
+		Bundle extras = new Bundle();
+		extras.putString("bookID", book.get_id());
+		extras.putString("sessionID",this.getSessionID());
+		bookViewerIntent.putExtra("extra", extras);
 		startActivity(bookViewerIntent);
 	}
 

@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/metters100"
+            android:title="100">
+        </item>
+        <item
+            android:id="@+id/metters500"
+            android:title="500">
+        </item>
+        <item
+            android:id="@+id/metters1000"
+            android:title="1000">
+        </item>
+        <item
+            android:id="@+id/metters2000"
+            android:title="2000">
+        </item>
+        <item
+            android:id="@+id/metters5000"
+            android:checked="true"
+            android:title="5000">
+        </item>
+        <item
+            android:id="@+id/metters10000"
+            android:title="10000">
+        </item>
+        <item
+            android:id="@+id/metters100000"
+            android:title="100000">
+        </item>
+    </group>
+
+</menu>

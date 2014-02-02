@@ -1,6 +1,8 @@
 <resources>
-	<dimen name="login_register_textfield_left_right_margin">150dp</dimen>
-	<dimen name="login_register_header_top_margin">300dp</dimen>
-	<dimen name="login_register_text_size">25sp</dimen>
-	<dimen name="book_viewer_elements_corner_radius">10dp</dimen>
+
+    <dimen name="login_register_textfield_left_right_margin">150dp</dimen>
+    <dimen name="login_register_header_top_margin">300dp</dimen>
+    <dimen name="login_register_text_size">25sp</dimen>
+    <dimen name="book_viewer_elements_corner_radius">10dp</dimen>
+
 </resources>
