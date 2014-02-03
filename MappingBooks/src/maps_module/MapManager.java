@@ -26,8 +26,8 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.project.mappingbooks.R;
 
-import android.R;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -268,7 +268,9 @@ public class MapManager {
 	private LinkedList<LinkedList<LatLng>> getXMLPolygons() throws ParserConfigurationException, SAXException, IOException{
 		LinkedList<LinkedList<LatLng>> polygons = new LinkedList<LinkedList<LatLng>>();
 
-		//InputStream is = getResources().openRawResource(R.raw.);
+		//eroare la linia de cod de mai jos
+		
+		InputStream is = getResources().openRawResource(R.raw.localitati);
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
