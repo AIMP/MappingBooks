@@ -268,7 +268,7 @@ public class MapManager {
 	private LinkedList<LinkedList<LatLng>> getXMLPolygons() throws ParserConfigurationException, SAXException, IOException{
 		LinkedList<LinkedList<LatLng>> polygons = new LinkedList<LinkedList<LatLng>>();
 
-		InputStream is = getResources().openRawResource(R.raw.);
+		//InputStream is = getResources().openRawResource(R.raw.);
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
