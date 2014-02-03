@@ -1,5 +1,6 @@
 package interface_module;
 
+import interface_module.async_tasks.DownloadBookAsyncTask;
 import interface_module.async_tasks.LocationChangesRequestAsyncTask;
 import interface_module.async_tasks.ProximityRequestAsyncTask;
 import interface_module.slinding_menu.NavDrawerItem;
@@ -68,6 +69,7 @@ public class BookViewerActivity extends FragmentActivity implements
 	private String currentBookID;
 	private ArrayList<Place> nearByPlaces;
 	private SpannableStringBuilder stringBuilder;
+	private View overlay;
 	PopupMenu popup;
 	int currentOptionChoosed;
 	int fontSize = -1;
@@ -97,6 +99,7 @@ public class BookViewerActivity extends FragmentActivity implements
 		testSpannable();
 		String deviceType = getResources().getString(R.string.device);
 		buildLeftSlidingMenu();
+		overlay = findViewById(R.id.overlay);
 		if (deviceType.equalsIgnoreCase("Smartphone")) {
 			isPhone = true;
 			buildRightSlidingMenu();
@@ -105,16 +108,16 @@ public class BookViewerActivity extends FragmentActivity implements
 			mRightView = findViewById(R.id.leftView);
 			map = ((SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map)).getMap();
-
+			map.setMyLocationEnabled(true);
 		}
 		if (map != null) {
-			MapManager.getInstance().linkWith(lm, map);
-			MapManager.getInstance().setup();
+			MapManager.getInstance().linkWith(lm, map,this);
 		}
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-
+		new DownloadBookAsyncTask(this).execute(new String[] {
+				this.getCurrentSessionID(), this.getCurrentBookID() });
 		new ProximityRequestAsyncTask(this, true).execute(new String[] { this
 				.getCurrentSessionID() });
 	}
@@ -225,7 +228,8 @@ public class BookViewerActivity extends FragmentActivity implements
 		mRightView = findViewById(R.id.leftView);
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
-		map.setMyLocationEnabled(true);
+		if (map != null)
+			map.setMyLocationEnabled(true);
 
 	}
 
@@ -462,7 +466,8 @@ public class BookViewerActivity extends FragmentActivity implements
 
 	public void setNearByPlaces(ArrayList<Place> nearByPlaces) {
 		this.nearByPlaces = nearByPlaces;
-		// TODO:call MapManager
+		if (map != null)
+			MapManager.getInstance().refreshWithData(nearByPlaces);
 	}
 
 	public void testSpannable() {
@@ -532,5 +537,28 @@ public class BookViewerActivity extends FragmentActivity implements
 		alertDialog.getWindow().setAttributes(lp);
 		alertDialog.getWindow().addFlags(
 				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+	}
+
+	public void showDownloadingOverlay() {
+		overlay.setVisibility(View.VISIBLE);
+		((TextView) findViewById(R.id.processTextView))
+				.setText("Downloading...");
+	}
+
+	public void showProcessingOverlay() {
+		((TextView) findViewById(R.id.processTextView))
+				.setText("Processing...");
+	}
+
+	public void removeOverlay() {
+		overlay.setVisibility(View.GONE);
+	}
+
+	public View getOverlay() {
+		return overlay;
+	}
+
+	public void setOverlay(View overlay) {
+		this.overlay = overlay;
 	}
 }

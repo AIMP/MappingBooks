@@ -1,8 +1,7 @@
 package interface_module.async_tasks;
 
-import interface_module.BookListActivity;
+import interface_module.BookViewerActivity;
 import interface_module.NetworkManager;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,12 +16,16 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
-public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
+public class DownloadBookAsyncTask extends AsyncTask<String, Void, String> {
+	protected BookViewerActivity linkedActivity;
 
-	protected BookListActivity activity;
+	public DownloadBookAsyncTask(BookViewerActivity activity) {
+		this.linkedActivity = activity;
+	}
 
-	public AddBookAsyncUpload(BookListActivity activity) {
-		this.activity = activity;
+	@Override
+	protected void onPreExecute() {
+		this.linkedActivity.showDownloadingOverlay();
 	}
 	
 	@Override
@@ -30,18 +33,13 @@ public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
 		try {
 			String[] type = null;
 			String URL = null;
-			if (params.length == 2) { // login
-				type = new String[2];
-				type[0] = "sessionID";
-				type[1] = "qrcode";
-				URL = "http://clientserver.aws.af.cm/client/addBook";// https://ia_clientserver-c9-icaliman.c9.io/client/addBook
-			}
+
+			URL = "http://clientserver.aws.af.cm/client/getBook";
+			type = new String[2];
+			type[0] = "sessionID";
+			type[1] = "bookID";
 			HttpPost post = new HttpPost(URL);
-			HttpClient client = NetworkManager.getNewHttpClient();// new
-			// DefaultHttpClient();
-			/*HttpConnectionParams
-					.setConnectionTimeout(client.getParams(), 10000); // Timeout
-																		// Limit*/
+			HttpClient client = NetworkManager.getNewHttpClient();
 			HttpResponse response;
 			JSONObject json = new JSONObject();
 
@@ -58,7 +56,6 @@ public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
 				InputStream in = response.getEntity().getContent();
 				String line;
 				StringBuilder builder = new StringBuilder();
-				// (1)
 				BufferedReader bReader = new BufferedReader(
 						new InputStreamReader(in));
 				while ((line = bReader.readLine()) != null) {
@@ -76,9 +73,8 @@ public class AddBookAsyncUpload extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		if(this.activity!=null) {
-			this.activity.handleUploadResponse(result);
-		}
+		//TODO:start parsing
+		this.linkedActivity.removeOverlay();
 	}
 
 }

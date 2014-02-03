@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
@@ -15,8 +15,27 @@
             android:background="@drawable/rounded_area"
             android:scrollbars="vertical"
             android:textSize="15sp" />
-    </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent_black"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="center" >
+			<ProgressBar 
+			    android:indeterminate="true"
+			    android:layout_height="150dp"
+			    android:layout_width="150dp"/>
+            
+            <TextView
+                android:id="@+id/processTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/login_register_text_size" />
+        </LinearLayout>
+    </FrameLayout>
     <!-- Listview to display slider menu -->
 
     <ListView
