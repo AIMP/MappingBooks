@@ -1,33 +1,17 @@
 package maps_module;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.project.mappingbooks.R;
-
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -265,7 +249,7 @@ public class MapManager {
 		return midPoint;
 	}
 
-	private LinkedList<LinkedList<LatLng>> getXMLPolygons() throws ParserConfigurationException, SAXException, IOException{
+	/*private LinkedList<LinkedList<LatLng>> getXMLPolygons() throws ParserConfigurationException, SAXException, IOException{
 		LinkedList<LinkedList<LatLng>> polygons = new LinkedList<LinkedList<LatLng>>();
 
 		//eroare la linia de cod de mai jos
@@ -278,21 +262,13 @@ public class MapManager {
 
 		doc.getDocumentElement().normalize();
 
-		//System.out.println("Root element :" + doc.getDocumentElement().getNodeName() + "\n");
-
 		NodeList nList = doc.getElementsByTagName("localitate");
-
-		//System.out.println("<---------------------------->");
 
 		int length = nList.getLength();
 
 		for(int i=0;i<length;i++){
 			Node nNode = nList.item(i).getLastChild();
 			LinkedList<LatLng> polygon = new LinkedList<LatLng>();
-
-			//Node fNode = nList.item(i).getFirstChild();
-
-			//System.out.println("Nume Element :" + fNode.getTextContent());
 
 			NodeList coordList = nNode.getChildNodes();
 			int len = coordList.getLength();
@@ -303,15 +279,10 @@ public class MapManager {
 				Node latNode = coordList.item(j).getFirstChild();
 				Node lngNode = coordList.item(j).getLastChild();
 
-				//System.out.println("\nLatitudine Element :" + latNode.getNodeName() + " " + latNode.getTextContent());
-				//System.out.println("Longitudine Element :" + lngNode.getNodeName() + " " + lngNode.getTextContent() + "\n");
-
 				latLng = new LatLng(Double.parseDouble(latNode.getTextContent()),Double.parseDouble(lngNode.getTextContent()));
 
 				polygon.add(latLng);
 			}
-
-			//System.out.println(i + "-->)Polygon Length :" + polygon.size());
 
 			polygons.add(polygon);
 		}
@@ -345,9 +316,9 @@ public class MapManager {
 		@SuppressWarnings("unused")
 		Marker kiel = map.addMarker(new MarkerOptions().position(latLng)
 				.title("Iasi").snippet("Iasi is cool")
-				/*
-				 * .icon(BitmapDescriptorFactory .fromResource(R.drawable.ic_launcher))
-				 */);
+				
+				 //.icon(BitmapDescriptorFactory .fromResource(R.drawable.ic_launcher))
+				 );
 
 		// map.moveCamera(CameraUpdateFactory.newLatLngZoom(IASI,10));
 
@@ -357,6 +328,6 @@ public class MapManager {
 		.target(latLng).zoom(10).bearing(0).tilt(30).build();
 
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-	}
+	}*/
 
 }
