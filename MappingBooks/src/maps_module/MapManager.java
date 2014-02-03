@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.w3c.dom.Document;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,7 +21,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -58,7 +56,8 @@ public class MapManager {
 		this.location = l;
 	}
 
-	public void linkWith(LocationManager lm, GoogleMap map, BookViewerActivity activity) {
+	public void linkWith(LocationManager lm, GoogleMap map,
+			BookViewerActivity activity) {
 		this.locationManager = lm;
 		this.map = map;
 		this.map.setMyLocationEnabled(true);
@@ -293,5 +292,82 @@ public class MapManager {
 			return response;
 		}
 	}
+
+	/*
+	 * private LinkedList<LinkedList<LatLng>> getXMLPolygons() throws
+	 * ParserConfigurationException, SAXException, IOException{
+	 * LinkedList<LinkedList<LatLng>> polygons = new
+	 * LinkedList<LinkedList<LatLng>>();
+	 * 
+	 * //eroare la linia de cod de mai jos
+	 * 
+	 * InputStream is = getResources().openRawResource(R.raw.localitati);
+	 * 
+	 * DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	 * DocumentBuilder dBuilder = dbFactory.newDocumentBuilder(); Document doc =
+	 * dBuilder.parse(is);
+	 * 
+	 * doc.getDocumentElement().normalize();
+	 * 
+	 * NodeList nList = doc.getElementsByTagName("localitate");
+	 * 
+	 * int length = nList.getLength();
+	 * 
+	 * for(int i=0;i<length;i++){ Node nNode = nList.item(i).getLastChild();
+	 * LinkedList<LatLng> polygon = new LinkedList<LatLng>();
+	 * 
+	 * NodeList coordList = nNode.getChildNodes(); int len =
+	 * coordList.getLength();
+	 * 
+	 * for(int j=0;j<len;j++){ LatLng latLng;
+	 * 
+	 * Node latNode = coordList.item(j).getFirstChild(); Node lngNode =
+	 * coordList.item(j).getLastChild();
+	 * 
+	 * latLng = new
+	 * LatLng(Double.parseDouble(latNode.getTextContent()),Double.parseDouble
+	 * (lngNode.getTextContent()));
+	 * 
+	 * polygon.add(latLng); }
+	 * 
+	 * polygons.add(polygon); }
+	 * 
+	 * return polygons; }
+	 * 
+	 * private void drawPolygons(LinkedList<LinkedList<LatLng>> polygons){
+	 * 
+	 * int length = polygons.size();
+	 * 
+	 * for(int i=0;i<5;i++){ LinkedList<LatLng> polygon = polygons.get(i);
+	 * 
+	 * PolygonOptions polygonOptions = new PolygonOptions()
+	 * .addAll(polygon).strokeColor(Color.YELLOW) .fillColor(Color.LTGRAY)
+	 * .strokeWidth(3);
+	 * 
+	 * Polygon polyGon = this.map.addPolygon(polygonOptions); } }
+	 * 
+	 * private void showMap(LatLng latLng) throws ParserConfigurationException,
+	 * SAXException, IOException {
+	 * 
+	 * LinkedList<LinkedList<LatLng>> polygons = new
+	 * LinkedList<LinkedList<LatLng>>();
+	 * 
+	 * polygons = this.getXMLPolygons(); this.drawPolygons(polygons);
+	 * 
+	 * @SuppressWarnings("unused") Marker kiel = map.addMarker(new
+	 * MarkerOptions().position(latLng) .title("Iasi").snippet("Iasi is cool")
+	 * 
+	 * //.icon(BitmapDescriptorFactory .fromResource(R.drawable.ic_launcher)) );
+	 * 
+	 * // map.moveCamera(CameraUpdateFactory.newLatLngZoom(IASI,10));
+	 * 
+	 * // map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+	 * 
+	 * CameraPosition cameraPosition = new CameraPosition.Builder()
+	 * .target(latLng).zoom(10).bearing(0).tilt(30).build();
+	 * 
+	 * map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	 * }
+	 */
 
 }
