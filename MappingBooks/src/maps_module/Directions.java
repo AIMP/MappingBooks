@@ -1,8 +1,6 @@
 package maps_module;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,7 +18,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
