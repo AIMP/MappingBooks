@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
@@ -27,7 +28,7 @@ public class DownloadBookAsyncTask extends AsyncTask<String, Void, String> {
 	protected void onPreExecute() {
 		this.linkedActivity.showDownloadingOverlay();
 	}
-	
+
 	@Override
 	protected String doInBackground(String... params) {
 		try {
@@ -73,8 +74,17 @@ public class DownloadBookAsyncTask extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		//TODO:start parsing
-		this.linkedActivity.removeOverlay();
+		JSONObject rootObject;
+		try {
+			rootObject = new JSONObject(result);
+			String status = rootObject.getString("status");
+			if (status.equalsIgnoreCase("ok")) {
+				new ParseXmlAsync(linkedActivity).execute(rootObject.getString("xmlBook"));
+			}
+		} catch (JSONException e) {
+			linkedActivity.removeOverlay();
+		}
+		
 	}
 
 }

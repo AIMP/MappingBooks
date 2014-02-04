@@ -43,6 +43,7 @@
         <activity android:name="interface_module.RegisterActivity" />
         <activity android:name="interface_module.BookListActivity" />
         <activity android:name="interface_module.BookViewerActivity" />
+        <activity android:name="geography_module.DisplayMessageActivity" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -52,7 +53,7 @@
             android:value="@integer/google_play_services_version" />
 
         <!-- Receive connection state changes -->
-        <receiver android:name="interface_module.NetworkManager.Receiver">
+        <receiver android:name="interface_module.NetworkManager.Receiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

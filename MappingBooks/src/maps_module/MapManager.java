@@ -27,12 +27,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import augm_reality_module.GMapV2Direction;
 
 public class MapManager {
 	private static MapManager instance = null;
 	protected LocationManager locationManager;
 	protected Criteria criteria;
-	protected Location location;
+	private Location location;
 	private String provider;
 	private HashMap<String, String> markers;
 	private List<Location> invisibleLocations;
@@ -40,11 +41,15 @@ public class MapManager {
 	private Location drawnEnd = null;
 	private Polyline linie = null;
 	private float maxDist = 5000;
-
+	public int mapMode = 0;
 	protected MapManager() {
 
 	}
 
+	public Location getLocation() {
+		return this.location;
+	}
+	
 	public static MapManager getInstance() {
 		if (instance == null) {
 			instance = new MapManager();
@@ -64,16 +69,18 @@ public class MapManager {
 		criteria = new Criteria();
 		provider = lm.getBestProvider(criteria, true);
 		location = lm.getLastKnownLocation(provider);
-		new LocationChangesRequestAsyncTask(activity).execute(new String[] {
-				activity.getCurrentSessionID(), activity.getCurrentBookID(),
-				String.valueOf(location.getLatitude()),
-				String.valueOf(location.getLongitude()) });
 		markers = new HashMap<String, String>();
 		invisibleLocations = new ArrayList<Location>();
-		if (location != null)
+		if (location != null) {
+			new LocationChangesRequestAsyncTask(activity).execute(new String[] {
+					activity.getCurrentSessionID(),
+					activity.getCurrentBookID(),
+					String.valueOf(location.getLatitude()),
+					String.valueOf(location.getLongitude()) });
 			map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
 					location.getLatitude(), location.getLongitude()), 14));
 
+		}
 	}
 
 	public void setup() {
@@ -117,9 +124,8 @@ public class MapManager {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void addMarkersToMap() {
-		Entities entities = new Entities();
-		HashMap<String, String> locations = entities.getLocations();
-		Set set = locations.entrySet();
+		
+		Set set = markers.entrySet();
 		Iterator it = set.iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, String> me = (Map.Entry<String, String>) it
@@ -283,8 +289,13 @@ public class MapManager {
 			Directions md = new Directions();
 			Document doc = md.getDocument(start, end, waypoints,
 					Directions.MODE_DRIVING);
+			
 			ArrayList<LatLng> directionPoint = md.getDirection(doc);
-
+			String directions="<html><body>";
+			GMapV2Direction mvd = new GMapV2Direction();
+			directions += mvd.getInstructions(doc);
+			directions=directions+"</body></html>";
+			
 			for (int i = 0; i < directionPoint.size(); i++) {
 				response.add(directionPoint.get(i));
 			}

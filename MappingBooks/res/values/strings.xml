@@ -29,7 +29,6 @@
         <item >Proximity</item>
         <item >Font Size</item>
         <item>Map Mode</item>
-        <item >Save</item>
         <item >Exit</item>
         </string-array>
     
@@ -38,8 +37,7 @@
     <array name="nav_drawer_icons">
         <item>@drawable/proximity</item>
         <item>@drawable/text_size</item>
-        <item>@drawable/text_size</item>
-        <item>@drawable/save</item>
+        <item>@drawable/map_icon</item>
         <item>@drawable/exit</item>
        
     </array>

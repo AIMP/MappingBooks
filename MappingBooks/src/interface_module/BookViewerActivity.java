@@ -1,5 +1,6 @@
 package interface_module;
 
+import geography_module.DisplayMessageActivity;
 import interface_module.async_tasks.DownloadBookAsyncTask;
 import interface_module.async_tasks.LocationChangesRequestAsyncTask;
 import interface_module.async_tasks.ProximityRequestAsyncTask;
@@ -7,6 +8,8 @@ import interface_module.slinding_menu.NavDrawerItem;
 import interface_module.slinding_menu.NavDrawerListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import maps_module.MapManager;
 
 import android.annotation.SuppressLint;
@@ -37,6 +40,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.textservice.TextInfo;
 import android.widget.AdapterView;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ListView;
@@ -97,7 +101,6 @@ public class BookViewerActivity extends FragmentActivity implements
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 5, this);
 		textview = (TextView) findViewById(R.id.book_text);
 		textview.setMovementMethod(new ScrollingMovementMethod());
-		testSpannable();
 		String deviceType = getResources().getString(R.string.device);
 		buildLeftSlidingMenu();
 		overlay = findViewById(R.id.overlay);
@@ -112,7 +115,7 @@ public class BookViewerActivity extends FragmentActivity implements
 			map.setMyLocationEnabled(true);
 		}
 		if (map != null) {
-			MapManager.getInstance().linkWith(lm, map,this);
+			MapManager.getInstance().linkWith(lm, map, this);
 		}
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -173,19 +176,50 @@ public class BookViewerActivity extends FragmentActivity implements
 			return true;
 		case R.id.normal_view:
 			mapsMenu = 1;
-			// apelata harta
+			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
+				mDrawerLayout.closeDrawer(mLeftListView);
+			}
+			if (isPhone) {
+				if (mDrawerLayout.isDrawerOpen(mRightView)) {
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
+					mDrawerLayout.closeDrawer(mRightView);
+				} else {
+					mDrawerLayout.openDrawer(mRightView);
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
+				}
+			}
 			item.setChecked(true);
 			return true;
 		case R.id.view_3d:
 			mapsMenu = 2;
-			//apelata harta
-			item.setChecked(true);
+
+			Intent intent = new Intent(this, DisplayMessageActivity.class);
+			double[] latLong = new double[2];
+			latLong[0] = MapManager.getInstance().getLocation().getLatitude();
+			latLong[1] = MapManager.getInstance().getLocation().getLongitude();
+			intent.putExtra("currentLocation", latLong);
+			startActivity(intent);
 			return true;
 		case R.id.indications:
 			mapsMenu = 3;
-			//apelata harta
+			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
+				mDrawerLayout.closeDrawer(mLeftListView);
+			}
+			if (isPhone) {
+				if (mDrawerLayout.isDrawerOpen(mRightView)) {
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
+					mDrawerLayout.closeDrawer(mRightView);
+				} else {
+					mDrawerLayout.openDrawer(mRightView);
+					mDrawerLayout.setDrawerLockMode(
+							DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
+				}
+			}
 			item.setChecked(true);
-			return(true);
+			return (true);
 		default:
 			return false;
 		}
@@ -216,9 +250,7 @@ public class BookViewerActivity extends FragmentActivity implements
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons
 				.getResourceId(2, -1))); // Map Mode
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons
-				.getResourceId(3, -1))); // Save
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons
-				.getResourceId(4, -1))); // Exit
+				.getResourceId(3, -1))); // Exit
 		navMenuIcons.recycle();// Recycle the typed array
 		adapter = new NavDrawerListAdapter(getApplicationContext(),
 				navDrawerItems);// setting the nav drawer list adapter
@@ -288,16 +320,16 @@ public class BookViewerActivity extends FragmentActivity implements
 				popup.getMenu().getItem(fontSize - 1).setChecked(true);
 			}
 			popup.show();
-		}else if(position == 2){
-			popup =  new PopupMenu(this, parentView);
+		} else if (position == 2) {
+			popup = new PopupMenu(this, parentView);
 			MenuInflater inflater = popup.getMenuInflater();
 			inflater.inflate(R.menu.maps_menu, popup.getMenu());
 			popup.setOnMenuItemClickListener(this);
-			if(mapsMenu != -1){
-				popup.getMenu().getItem(mapsMenu -1).setChecked(true);
+			if (mapsMenu != -1) {
+				popup.getMenu().getItem(mapsMenu - 1).setChecked(true);
 			}
 			popup.show();
-			
+
 		}
 	}
 
@@ -306,9 +338,6 @@ public class BookViewerActivity extends FragmentActivity implements
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu items for use in the action bar
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -352,27 +381,7 @@ public class BookViewerActivity extends FragmentActivity implements
 			} else {
 				mDrawerLayout.openDrawer(mLeftListView);
 			}
-
 			return true;
-		case R.id.action_settings:
-			return true;
-		case R.id.action_previous:
-			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
-				mDrawerLayout.closeDrawer(mLeftListView);
-			}
-			if (isPhone) {
-				if (mDrawerLayout.isDrawerOpen(mRightView)) {
-					mDrawerLayout.setDrawerLockMode(
-							DrawerLayout.LOCK_MODE_UNLOCKED, mRightView);
-					mDrawerLayout.closeDrawer(mRightView);
-				} else {
-					mDrawerLayout.openDrawer(mRightView);
-					mDrawerLayout.setDrawerLockMode(
-							DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
-				}
-			}
-			return true;
-		case R.id.action_next:
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -447,7 +456,7 @@ public class BookViewerActivity extends FragmentActivity implements
 	public void handleNewPlaces(ArrayList<Place> newPlaces) {
 		if (newPlaces == null)
 			return;
-		if (newPlaces.size() != 0) {
+		if (newPlaces.size() >= 0) {
 			setNearByPlaces(newPlaces);
 		}
 	}
@@ -543,7 +552,12 @@ public class BookViewerActivity extends FragmentActivity implements
 
 	public void showDialogAlert(String text, View btn, ArrayList<String> links) {
 		Builder builder = new AlertDialog.Builder(this);
-
+		if(links == null) {
+			links = new ArrayList<String>();
+			links.add("Link1");
+			links.add("Link2");
+		}
+		
 		builder.setTitle(text);
 		int i = 0;
 		String[] dialogLinks = new String[links.size()];
@@ -587,5 +601,21 @@ public class BookViewerActivity extends FragmentActivity implements
 
 	public void setOverlay(View overlay) {
 		this.overlay = overlay;
+	}
+
+	public void showBook(List<Words> words) {
+		for (Words word : words) {
+			if (word.isEntity) {
+				this.appendHighlightedText(word.word + " ", null);
+			} else {
+				this.appendNormalText(word.word + " ");
+			}
+		}
+		textview.setMovementMethod(LinkMovementMethod.getInstance());
+		textview.setText(stringBuilder, BufferType.SPANNABLE);
+	}
+
+	public void showSegments(List<Segment> words) {
+
 	}
 }
