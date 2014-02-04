@@ -28,6 +28,7 @@
     <string-array name="nav_drawer_items">
         <item >Proximity</item>
         <item >Font Size</item>
+        <item>Map Mode</item>
         <item >Save</item>
         <item >Exit</item>
         </string-array>
@@ -36,6 +37,7 @@
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
         <item>@drawable/proximity</item>
+        <item>@drawable/text_size</item>
         <item>@drawable/text_size</item>
         <item>@drawable/save</item>
         <item>@drawable/exit</item>

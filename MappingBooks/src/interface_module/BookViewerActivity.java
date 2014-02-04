@@ -74,6 +74,7 @@ public class BookViewerActivity extends FragmentActivity implements
 	int currentOptionChoosed;
 	int fontSize = -1;
 	private double proximity = -1;
+	int mapsMenu = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +171,21 @@ public class BookViewerActivity extends FragmentActivity implements
 			textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 			item.setChecked(true);
 			return true;
+		case R.id.normal_view:
+			mapsMenu = 1;
+			// apelata harta
+			item.setChecked(true);
+			return true;
+		case R.id.view_3d:
+			mapsMenu = 2;
+			//apelata harta
+			item.setChecked(true);
+			return true;
+		case R.id.indications:
+			mapsMenu = 3;
+			//apelata harta
+			item.setChecked(true);
+			return(true);
 		default:
 			return false;
 		}
@@ -198,9 +214,11 @@ public class BookViewerActivity extends FragmentActivity implements
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons
 				.getResourceId(1, -1))); // Font
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons
-				.getResourceId(2, -1))); // Save
+				.getResourceId(2, -1))); // Map Mode
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons
-				.getResourceId(3, -1))); // Exit
+				.getResourceId(3, -1))); // Save
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons
+				.getResourceId(4, -1))); // Exit
 		navMenuIcons.recycle();// Recycle the typed array
 		adapter = new NavDrawerListAdapter(getApplicationContext(),
 				navDrawerItems);// setting the nav drawer list adapter
@@ -270,6 +288,16 @@ public class BookViewerActivity extends FragmentActivity implements
 				popup.getMenu().getItem(fontSize - 1).setChecked(true);
 			}
 			popup.show();
+		}else if(position == 2){
+			popup =  new PopupMenu(this, parentView);
+			MenuInflater inflater = popup.getMenuInflater();
+			inflater.inflate(R.menu.maps_menu, popup.getMenu());
+			popup.setOnMenuItemClickListener(this);
+			if(mapsMenu != -1){
+				popup.getMenu().getItem(mapsMenu -1).setChecked(true);
+			}
+			popup.show();
+			
 		}
 	}
 
@@ -295,9 +323,8 @@ public class BookViewerActivity extends FragmentActivity implements
 			switch (position) {
 			case 0:
 			case 1:
+			case 2:
 				createPopupWindow(position, view);
-				break;
-			case 2:// TODO: asynctask for saving preferences
 				break;
 			case 3:
 				finish();
