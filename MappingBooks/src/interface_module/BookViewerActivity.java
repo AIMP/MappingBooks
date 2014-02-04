@@ -40,7 +40,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.textservice.TextInfo;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ListView;
@@ -175,6 +175,7 @@ public class BookViewerActivity extends FragmentActivity implements
 			item.setChecked(true);
 			return true;
 		case R.id.normal_view:
+			MapManager.getInstance().setMapModeAndActivity(0, null);
 			mapsMenu = 1;
 			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
 				mDrawerLayout.closeDrawer(mLeftListView);
@@ -194,7 +195,7 @@ public class BookViewerActivity extends FragmentActivity implements
 			return true;
 		case R.id.view_3d:
 			mapsMenu = 2;
-
+			MapManager.getInstance().setMapModeAndActivity(1, null);
 			Intent intent = new Intent(this, DisplayMessageActivity.class);
 			double[] latLong = new double[2];
 			latLong[0] = MapManager.getInstance().getLocation().getLatitude();
@@ -204,6 +205,7 @@ public class BookViewerActivity extends FragmentActivity implements
 			return true;
 		case R.id.indications:
 			mapsMenu = 3;
+			MapManager.getInstance().setMapModeAndActivity(2, this);
 			if (mDrawerLayout.isDrawerOpen(mLeftListView)) {
 				mDrawerLayout.closeDrawer(mLeftListView);
 			}
@@ -218,8 +220,9 @@ public class BookViewerActivity extends FragmentActivity implements
 							DrawerLayout.LOCK_MODE_LOCKED_OPEN, mRightView);
 				}
 			}
+
 			item.setChecked(true);
-			return (true);
+			return true;
 		default:
 			return false;
 		}
@@ -552,12 +555,12 @@ public class BookViewerActivity extends FragmentActivity implements
 
 	public void showDialogAlert(String text, View btn, ArrayList<String> links) {
 		Builder builder = new AlertDialog.Builder(this);
-		if(links == null) {
+		if (links == null) {
 			links = new ArrayList<String>();
 			links.add("Link1");
 			links.add("Link2");
 		}
-		
+
 		builder.setTitle(text);
 		int i = 0;
 		String[] dialogLinks = new String[links.size()];
@@ -615,7 +618,9 @@ public class BookViewerActivity extends FragmentActivity implements
 		textview.setText(stringBuilder, BufferType.SPANNABLE);
 	}
 
-	public void showSegments(List<Segment> words) {
-
+	public void showSegments(List<Segment> segments) {
+		for (Segment seg : segments) {
+			Log.v("Path", seg.start + " - " + seg.end + ":" + seg.distance);
+		}
 	}
 }

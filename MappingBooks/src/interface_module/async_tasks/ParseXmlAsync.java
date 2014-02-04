@@ -37,7 +37,7 @@ public class ParseXmlAsync extends AsyncTask<String, Void, Components> {
 	protected void onPostExecute(Components result) {
 		linkedActivity.removeOverlay();
 		linkedActivity.showBook(result.getWords());
-		//linkedActivity.showSegments(result.getSegments());
+		linkedActivity.showSegments(result.getSegments());
 	}
 
 }

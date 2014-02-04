@@ -21,12 +21,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.WebView;
 import augm_reality_module.GMapV2Direction;
 
 public class MapManager {
@@ -42,6 +46,8 @@ public class MapManager {
 	private Polyline linie = null;
 	private float maxDist = 5000;
 	public int mapMode = 0;
+	private BookViewerActivity linkedActivity;
+
 	protected MapManager() {
 
 	}
@@ -49,12 +55,17 @@ public class MapManager {
 	public Location getLocation() {
 		return this.location;
 	}
-	
+
 	public static MapManager getInstance() {
 		if (instance == null) {
 			instance = new MapManager();
 		}
 		return instance;
+	}
+
+	public void setMapModeAndActivity(int mapMode, BookViewerActivity activivity) {
+		this.mapMode = mapMode;
+		this.linkedActivity = activivity;
 	}
 
 	public void setLocation(Location l) {
@@ -124,7 +135,7 @@ public class MapManager {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void addMarkersToMap() {
-		
+
 		Set set = markers.entrySet();
 		Iterator it = set.iterator();
 		while (it.hasNext()) {
@@ -289,13 +300,15 @@ public class MapManager {
 			Directions md = new Directions();
 			Document doc = md.getDocument(start, end, waypoints,
 					Directions.MODE_DRIVING);
-			
+
 			ArrayList<LatLng> directionPoint = md.getDirection(doc);
-			String directions="<html><body>";
+			String directions = "<html><body>";
 			GMapV2Direction mvd = new GMapV2Direction();
 			directions += mvd.getInstructions(doc);
-			directions=directions+"</body></html>";
-			
+			directions = directions + "</body></html>";
+			if (mapMode == 2) {
+				showIndications(directions);
+			}
 			for (int i = 0; i < directionPoint.size(); i++) {
 				response.add(directionPoint.get(i));
 			}
@@ -304,6 +317,29 @@ public class MapManager {
 		}
 	}
 
+	private void showIndications(final String directions) {
+		this.linkedActivity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				AlertDialog.Builder alert = new AlertDialog.Builder(MapManager.getInstance().linkedActivity);
+				alert.setTitle("Indications");
+
+				WebView wv = new WebView(MapManager.getInstance().linkedActivity);
+				wv.loadData(directions, "text/html; charset=UTF-8", null);
+
+				alert.setView(wv);
+				alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.dismiss();
+					}
+				});
+				alert.show();
+			}
+		});
+		
+	}
 	/*
 	 * private LinkedList<LinkedList<LatLng>> getXMLPolygons() throws
 	 * ParserConfigurationException, SAXException, IOException{
